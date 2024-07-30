@@ -1,0 +1,6 @@
+@JudeWindApp_HostAddress = http://localhost:5272
+
+GET {{JudeWindApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
