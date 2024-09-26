@@ -1,4 +1,4 @@
-namespace JudeWindApp
+namespace JudeWind.Model.Weather
 {
     public class WeatherForecast
     {
