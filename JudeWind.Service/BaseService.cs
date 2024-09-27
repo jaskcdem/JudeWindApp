@@ -36,30 +36,15 @@ namespace JudeWind.Service
             string fileFullName = "";
             if (!string.IsNullOrEmpty(fileItem.FileName) && !string.IsNullOrEmpty(fileItem.FileType) && !string.IsNullOrEmpty(savePath))
             {
-                //取原始檔名中的副檔名
-                string fileExt = $".{fileItem.FileType.Replace(".", "")}", fileNewName = "";
-                if (useFileName)
-                {
-                    //引用原檔名
-                    fileNewName = fileItem.FileName;
-                }
-                else
-                {
-                    //為避免使用者上傳的檔案名稱發生重複，重新給一個亂數名稱
-                    fileNewName = Path.GetRandomFileName().Replace(".", "");
-                }
-
+                string fileExt = $".{fileItem.FileType.Replace(".", "")}";
+                string fileNewName = useFileName ? fileItem.FileName : Path.GetRandomFileName().Replace(".", "");
                 fileFullName = fileNewName + fileExt;
 
-                //指定路徑若不存在則先建立
                 if (!Directory.Exists(savePath)) { Directory.CreateDirectory(savePath); }
 
                 if (!string.IsNullOrEmpty(fileItem.FileBase64))
                 {
-                    //將檔案寫入到指定路徑
-                    File.WriteAllBytes(
-                    Path.Combine(savePath, fileFullName),
-                    Convert.FromBase64String(fileItem.FileBase64));
+                    File.WriteAllBytes(Path.Combine(savePath, fileFullName), Convert.FromBase64String(fileItem.FileBase64));
                 }
             }
             return fileFullName;
