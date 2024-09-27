@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataAcxess.ProjectContext;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace JudeWind.Service.Register
 {
-    public class UserInfoService : BaseService
+    public class UserInfoService(ProjectContext projectContext) : BaseService(projectContext)
     {
-        public UserInfoService() { }
-
         public async Task<string[]> GetUserPermission(string _userId) => [];
         public async Task<bool> IsRole(string _userid, string _rgId) => true;
         //public async Task<string[]> GetUserPermission(string _userId)

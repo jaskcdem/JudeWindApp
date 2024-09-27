@@ -1,4 +1,5 @@
-﻿using JudeWindApp.Services;
+﻿using JudeWind.Service.Register;
+using JudeWindApp.Services;
 using JudeWindApp.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -10,25 +11,12 @@ namespace JudeWindApp.Attributes
 {
     /// <summary> WebAPI Log filter </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class AppLogFilterAttribute : Attribute, IAsyncActionFilter
+    public class AppLogFilterAttribute(LogsService logsService, UserRecordService userRecordService, string systemName) : Attribute, IAsyncActionFilter
     {
         /// <summary> 系統名稱 </summary>
-        public string SystemName { get; set; }
-        private readonly LogsService _logsService;
-        //private readonly UserRecordService _userRecordService;
-
-        //public AppLogFilterAttribute(LogsService logsService, UserRecordService userRecordService, string systemName)
-        //{
-        //    _logsService = logsService;
-        //    _userRecordService = userRecordService;
-        //    SystemName = systemName;
-        //}
-        /// <summary> WebAPI Log filter </summary>
-        public AppLogFilterAttribute(LogsService logsService, string systemName)
-        {
-            _logsService = logsService;
-            SystemName = systemName;
-        }
+        public string SystemName { get; set; } = systemName;
+        private readonly LogsService _logsService = logsService;
+        private readonly UserRecordService _userRecordService = userRecordService;
 
         /// <summary> 當WebAPI的控制器剛被啟動和結束動作，會進入這個事件中 </summary>
         /// <param name="context"></param>
@@ -111,9 +99,8 @@ namespace JudeWindApp.Attributes
                     SessionID = context.HttpContext?.Session?.Id ?? string.Empty
                 });
 
-                //var recordTask = _userRecordService.AddUserRecord(userId, actionName, InputObj.ToString(), ipAddress);
-                //await Task.WhenAll(logTask, recordTask);
-                await logTask;
+                var recordTask = _userRecordService.AddUserRecord(userId, actionName, InputObj.ToString(), ipAddress);
+                await Task.WhenAll(logTask, recordTask);
             }
             catch (Exception) { }
         }

@@ -5,11 +5,13 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JudeWindApp", "JudeWindApp\JudeWindApp.csproj", "{D36ECFE6-EEFC-474F-A239-76BECC1F910F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{30655D4C-8635-4F80-8899-320938ECA7FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{30655D4C-8635-4F80-8899-320938ECA7FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JudeWind.Service", "JudeWind.Service\JudeWind.Service.csproj", "{1EA10CB7-4781-4E50-8519-73D23B83F1E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JudeWind.Service", "JudeWind.Service\JudeWind.Service.csproj", "{1EA10CB7-4781-4E50-8519-73D23B83F1E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JudeWind.Model", "JudeWind.Model\JudeWind.Model.csproj", "{894D0970-4BD2-4D46-A693-7C0EA5121FBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JudeWind.Model", "JudeWind.Model\JudeWind.Model.csproj", "{894D0970-4BD2-4D46-A693-7C0EA5121FBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAcxess", "DataAcxess\DataAcxess.csproj", "{F83D20CE-F849-4657-93A3-C0DE93C0FC9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{894D0970-4BD2-4D46-A693-7C0EA5121FBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{894D0970-4BD2-4D46-A693-7C0EA5121FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{894D0970-4BD2-4D46-A693-7C0EA5121FBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F83D20CE-F849-4657-93A3-C0DE93C0FC9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F83D20CE-F849-4657-93A3-C0DE93C0FC9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F83D20CE-F849-4657-93A3-C0DE93C0FC9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F83D20CE-F849-4657-93A3-C0DE93C0FC9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

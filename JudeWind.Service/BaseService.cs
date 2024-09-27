@@ -1,29 +1,19 @@
 ﻿using Common;
+using DataAcxess.ProjectContext;
 using JudeWind.Model.Base;
 using System.Data;
 
 namespace JudeWind.Service
 {
     /// <summary>  </summary>
-    public class BaseService
+    public class BaseService(ProjectContext projectContext)
     {
-
         #region Protected Members
-        ///// <summary> 配合Entity使用的DbContext </summary>
-        //protected readonly ProjectContext _db;
+        /// <summary> 配合Entity使用的DbContext </summary>
+        protected readonly ProjectContext _db = projectContext;
 
         /// <summary> 用於資料庫識別系統 </summary>
         protected readonly string SYSTEM_NAME = SysSetting.SysName;
-        #endregion
-
-        #region Constructor
-        ///// <summary>  </summary>
-        //public BaseService(ProjectContext projectContext)
-        //{
-        //    _db = projectContext;
-        //}
-        /// <summary>  </summary>
-        public BaseService() { }
         #endregion
 
         #region Protected Methods
@@ -77,17 +67,8 @@ namespace JudeWind.Service
         #endregion
     }
 
-    public abstract class BaseDapperService : BaseService
+    public abstract class BaseDapperService(ProjectContext projectContext, IDbConnection dbConnection) : BaseService(projectContext)
     {
-        protected readonly IDbConnection _dbConnection;
-
-        //protected BaseDapperService(ProjectContext projectContext, IDbConnection dbConnection) : base(projectContext)
-        //{
-        //    _dbConnection = dbConnection;
-        //}
-        protected BaseDapperService(IDbConnection dbConnection) : base()
-        {
-            _dbConnection = dbConnection;
-        }
+        protected readonly IDbConnection _dbConnection = dbConnection;
     }
 }
