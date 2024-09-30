@@ -9,6 +9,7 @@ namespace Common
     public static class SysSetting
     {
         public const string SysName = "JudeWind";
-
+        public const int PageDefult = 1;
+        public const int SizeDefult = 10;
     }
 }
