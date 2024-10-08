@@ -31,7 +31,7 @@ namespace JudeWind.Service
         /// <param name="savePath">存放實體路徑</param>
         /// <param name="useFileName">是否引用原檔名 (預設否)</param>
         /// <returns></returns>
-        public string SaveFile_Base64(FileItemModel fileItem, string savePath, bool useFileName = false)
+        protected string SaveFile_Base64(FileItemModel fileItem, string savePath, bool useFileName = false)
         {
             string fileFullName = "";
             if (!string.IsNullOrEmpty(fileItem.FileName) && !string.IsNullOrEmpty(fileItem.FileType) && !string.IsNullOrEmpty(savePath))
@@ -49,6 +49,10 @@ namespace JudeWind.Service
             }
             return fileFullName;
         }
+
+        /// <summary> 使用者權限id清單 </summary>
+        protected async Task<List<string>> UserRoles(string _userId)
+            => await _db.RoleGroupUser.AsAsyncEnumerable().Where(w => w.UserId == _userId).Select(w => w.RGId).ToListAsync();
         #endregion
     }
 

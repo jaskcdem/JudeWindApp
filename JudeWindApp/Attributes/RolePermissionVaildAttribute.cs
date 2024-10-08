@@ -59,28 +59,32 @@ namespace JudeWindApp.Attributes
                 return true;
 #endif
             }
-            var _permission = _userInfoService.GetUserPermission(_userid).Result;
-            //取得非繼承的Attribute
-            var _methodAttrs = ((ControllerBase)context.Controller).ControllerContext.ActionDescriptor.MethodInfo.GetCustomAttributes(false);
-            var _classAttrs = ((ControllerBase)context.Controller).ControllerContext.ActionDescriptor.ControllerTypeInfo.GetCustomAttributes(false);
-            if (_methodAttrs.Any(x => x is AllowAnonymousAttribute) || _classAttrs.Any(x => x is AllowAnonymousAttribute))
-                return true;
-            //如果有掛OpenPermissionAttribute,則改檢查使用者RoleId是否在白名單內
-            if (_methodAttrs.Any(x => x is OpenPermissionAttribute))
+            try
             {
-                OpenPermissionAttribute _openPermission = (OpenPermissionAttribute)_methodAttrs.FirstOrDefault(x => x is OpenPermissionAttribute)!;
-                return _openPermission.IsAllow(_userInfoService, _userid);
+                var _permission = _userInfoService.GetUserPermission(_userid).Result;
+                //取得非繼承的Attribute
+                var _methodAttrs = ((ControllerBase)context.Controller).ControllerContext.ActionDescriptor.MethodInfo.GetCustomAttributes(false);
+                var _classAttrs = ((ControllerBase)context.Controller).ControllerContext.ActionDescriptor.ControllerTypeInfo.GetCustomAttributes(false);
+                if (_methodAttrs.Any(x => x is AllowAnonymousAttribute) || _classAttrs.Any(x => x is AllowAnonymousAttribute))
+                    return true;
+                //如果有掛OpenPermissionAttribute,則改檢查使用者RoleId是否在白名單內
+                if (_methodAttrs.Any(x => x is OpenPermissionAttribute))
+                {
+                    OpenPermissionAttribute _openPermission = (OpenPermissionAttribute)_methodAttrs.FirstOrDefault(x => x is OpenPermissionAttribute)!;
+                    return _openPermission.IsAllow(_userInfoService, _userid);
+                }
+                else if (_classAttrs.Any(x => x is OpenPermissionAttribute))
+                {
+                    OpenPermissionAttribute _openPermission = (OpenPermissionAttribute)_classAttrs.FirstOrDefault(x => x is OpenPermissionAttribute)!;
+                    return _openPermission.IsAllow(_userInfoService, _userid);
+                }
+                else
+                {
+                    var _permissionController = MenuFuncControllerPairs.Where(x => _permission.Contains(x.Key)).SelectMany(x => x.Value.Split(','));
+                    return _permissionController.Contains(controllerName);
+                }
             }
-            else if (_classAttrs.Any(x => x is OpenPermissionAttribute))
-            {
-                OpenPermissionAttribute _openPermission = (OpenPermissionAttribute)_classAttrs.FirstOrDefault(x => x is OpenPermissionAttribute)!;
-                return _openPermission.IsAllow(_userInfoService, _userid);
-            }
-            else
-            {
-                var _permissionController = MenuFuncControllerPairs.Where(x => _permission.Contains(x.Key)).SelectMany(x => x.Value.Split(','));
-                return _permissionController.Contains(controllerName);
-            }
+            catch (Exception) { /*no db-connect, probably read fail*/ return true; }
         }
         #endregion
     }

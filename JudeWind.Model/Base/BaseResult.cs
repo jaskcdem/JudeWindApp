@@ -4,13 +4,13 @@ using System.Text.Json.Serialization;
 
 namespace JudeWind.Model.Base
 {
-    public class BaseResultHelper
+    public class BaseResultHelper<T>
     {
-        public static BaseResult<bool> GetBaseResult(Enum ResponseCode)
+        public static BaseResult<T> GetBaseResult(Enum ResponseCode, T Data)
         {
-            BaseResult<bool> result = new()
+            BaseResult<T> result = new()
             {
-                Body = true,
+                Body = Data,
                 Code = Convert.ToInt32(ResponseCode)
             };
             return result;

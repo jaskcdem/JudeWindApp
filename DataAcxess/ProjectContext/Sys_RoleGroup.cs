@@ -35,7 +35,7 @@ namespace DataAcxess.ProjectContext
         /// &#24314;&#31435;&#32773;
         /// </summary>
         [Required]
-        [StringLength(50)]
+        [StringLength(512)]
         public required string CreateUserId { get; set; }
         /// <summary>
         /// &#26356;&#26032;&#26178;&#38291;
@@ -46,7 +46,7 @@ namespace DataAcxess.ProjectContext
         /// &#26356;&#26032;&#32773;
         /// </summary>
         [Required]
-        [StringLength(50)]
+        [StringLength(512)]
         public string? UpdateUserId { get; set; }
 
         [InverseProperty("Sys_RoleGroup")]

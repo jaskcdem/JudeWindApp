@@ -5,14 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAcxess.ProjectContext
 {
+    /// <summary> 使用者總表 </summary>
     public partial class UserInfo
     {
-        /// <summary> 人員ID </summary>
+        /// <summary> 使用者ID </summary>
         [Key]
-        [StringLength(15)]
+        [StringLength(512)]
         public required string ID { get; set; }
-        /// <summary> &#20154;&#21729;&#22995;&#21517; </summary>
-        [StringLength(15)]
+        /// <summary> &#22995;&#21517; </summary>
+        [StringLength(512)]
         public required string Name { get; set; }
         /// <summary> &#23494;&#30908; </summary>
         [StringLength(255)]
@@ -29,7 +30,7 @@ namespace DataAcxess.ProjectContext
         [Column(TypeName = "date")]
         public DateTime? CheckDate { get; set; }
         /// <summary> &#26356;&#26032;&#32773; </summary>
-        [StringLength(15)]
+        [StringLength(512)]
         public string? UpdateUser { get; set; }
         /// <summary> &#26356;&#26032;&#26178;&#38291; </summary>
         [Column(TypeName = "datetime")]

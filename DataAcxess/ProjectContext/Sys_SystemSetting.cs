@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAcxess.ProjectContext
 {
+    /// <summary> 系統設定檔 </summary>
     public partial class Sys_SystemSetting
     {
         /// <summary> 實體/虛擬 </summary>
@@ -28,7 +29,7 @@ namespace DataAcxess.ProjectContext
         [Column(TypeName = "datetime")]
         public DateTime? ModifiedDateTime { get; set; }
         /// <summary> &#26356;&#26032;&#32773; </summary>
-        [StringLength(15)]
+        [StringLength(512)]
         public string? ModifiedUser { get; set; }
     }
 }

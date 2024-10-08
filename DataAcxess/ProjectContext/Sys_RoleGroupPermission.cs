@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAcxess.ProjectContext
 {
+    /// <summary> 權限群組控制檔 </summary>
     public partial class Sys_RoleGroupPermission
     {
         /// <summary> 權限群組控制流水號 </summary>

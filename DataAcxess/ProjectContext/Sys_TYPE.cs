@@ -5,7 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAcxess.ProjectContext
 {
-    public partial class Sys_TYPE
+    /// <summary> 系統代碼類型檔 </summary>
+    public partial class Sys_Type
     {
         /// <summary> 類型 </summary>
         [Key]
@@ -16,6 +17,6 @@ namespace DataAcxess.ProjectContext
         public required string DESC { get; set; }
         /// <summary> &#26159;&#21542;&#21487;&#32232;&#36655; </summary>
         [Required]
-        public bool? EDITOR { get; set; }
+        public bool EDITOR { get; set; }
     }
 }
