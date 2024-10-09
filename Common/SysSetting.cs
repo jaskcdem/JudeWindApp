@@ -12,5 +12,6 @@ namespace Common
         public const int PageDefult = 1;
         public const int SizeDefult = 10;
         public const int PasswardLength = 12;
+        public const string DefaultIp = "...1";
     }
 }

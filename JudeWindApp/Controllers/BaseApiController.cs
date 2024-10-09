@@ -1,4 +1,5 @@
-﻿using JudeWindApp.Attributes;
+﻿using Common;
+using JudeWindApp.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 
@@ -19,6 +20,9 @@ namespace JudeWindApp.Controllers
         #region Public Members
         /// <summary> 使用者帳號 </summary>
         public string UserId => GetUserId();
+
+        /// <summary>  </summary>
+        public string IPAddress => Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? SysSetting.DefaultIp;
         #endregion
 
         /// <summary>  </summary>

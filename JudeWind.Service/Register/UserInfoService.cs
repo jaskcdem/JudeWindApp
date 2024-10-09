@@ -2,7 +2,6 @@
 using DataAcxess.ProjectContext;
 using GreenUtility.Extension;
 using JudeWind.Model.DbSystem;
-using System.Security.Cryptography;
 
 namespace JudeWind.Service.Register
 {

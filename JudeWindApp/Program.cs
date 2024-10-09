@@ -1,3 +1,4 @@
+using JudeWindApp.Attributes;
 using JudeWindApp.Services;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
@@ -29,6 +30,11 @@ builder.Services.AddSwaggerGen(options =>
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     options.IncludeXmlComments(xmlPath);
+});
+//global Filter
+builder.Services.AddMvc(options =>
+{
+    options.Filters.Add<ExceptionFilter>();
 });
 
 var app = builder.Build();
