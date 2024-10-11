@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\DataAcxess\DataAcxess.csproj" />
   </ItemGroup>
 
   <ItemGroup>

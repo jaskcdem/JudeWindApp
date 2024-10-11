@@ -13,5 +13,7 @@ namespace Common
         public const int SizeDefult = 10;
         public const int PasswardLength = 12;
         public const string DefaultIp = "...1";
+        public const string UploadPath = "Upload";
+        public const string DownloadPath = "Download";
     }
 }
