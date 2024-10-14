@@ -19,11 +19,17 @@ namespace JudeWind.Model.Equips
 
         public Armor? Armor { get; set; }
     }
+    /// <summary> Equips info </summary>
+    public class EquipInfo
+    {
+        public IEquipItem Equip { get; set; } = null!;
+        public string TypeName { get => Equip.GetType().Name; }
+    }
     /// <summary> Equips </summary>
     public class EquipOutput
     {
         /// <summary> equip list </summary>
-        public List<IEquipItem> Equips { get; set; } = [];
+        public List<EquipInfo> Equips { get; set; } = [];
     }
     #endregion
 
@@ -46,15 +52,19 @@ namespace JudeWind.Model.Equips
         public Armor? Armor { get; set; }
 
         /// <summary> 附加狀態數 </summary>
+        /// <remarks>Max = 1</remarks>
         public int StatusCount { get; set; }
 
         /// <summary> 附加屬性數 </summary>
+        /// <remarks>Max = 1</remarks>
         public int ElementCount { get; set; }
 
         /// <summary> 附加上位屬性數 </summary>
+        /// <remarks>Max = 1, can't bind if <see cref="ElementCount"/> not zero</remarks>
         public int GreatElementCount { get; set; }
 
         /// <summary> 附加物理屬性數 </summary>
+        /// <remarks>Max = 1</remarks>
         public int PhysicCount { get; set; }
     }
 
@@ -69,6 +79,7 @@ namespace JudeWind.Model.Equips
     public class DecoratorEquipInfo
     {
         public IEquipItem Equip { get; set; } = null!;
+        public string TypeName { get => Equip.GetType().Name; }
         public List<UnhealthyStatus> UnhealthyStatuses = [];
         public List<Element> Elements = [];
         public List<GreatElement> GreatElements = [];

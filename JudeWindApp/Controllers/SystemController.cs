@@ -3,7 +3,6 @@ using JudeWind.Model.Base;
 using JudeWind.Model.DbSystem;
 using JudeWind.Service.DbSystem;
 using JudeWind.Service.Register;
-using JudeWindApp.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JudeWindApp.Controllers
@@ -59,8 +58,9 @@ namespace JudeWindApp.Controllers
 
         #region <-- UserInfo -->
         /// <summary> 取得使用者資料 </summary>
+        /// <param name="userId">使用者Id</param>
         [HttpGet]
-        public async Task<UserInfoOutput> GetUserInfo(string userId) => await _userInfoService.GetUserInfo(userId);
+        public async Task<UserInfoOutput> GetUserInfo([FromBody] string userId) => await _userInfoService.GetUserInfo(userId);
         /// <summary> 新增使用者 </summary>
         [HttpPost]
         public async Task NewUser(UserInfoInput input) => await _userInfoService.NewUser(input, IPAddress);
@@ -74,12 +74,14 @@ namespace JudeWindApp.Controllers
         [HttpPost]
         public async Task<bool> ChangePsw(ChangePswInput input) => await _userInfoService.ChangePsw(input);
         /// <summary> 使用者忘記密碼 </summary>
+        /// <param name="userId">使用者Id</param>
         [HttpPost]
-        public async Task<ForgetPswResult> ForgetPsw(string userId) => await _userInfoService.ForgetPsw(userId);
+        public async Task<ForgetPswResult> ForgetPsw([FromBody] string userId) => await _userInfoService.ForgetPsw(userId);
         #endregion
 
         #region <-- Role -->
         /// <summary> 權限群組清單 </summary>
+        [HttpGet]
         public async Task<List<RoleOutput>> GetRoles() => await _roleService.GetRoles();
         /// <summary> 新增權限群組 </summary>
         [HttpPost]
@@ -88,33 +90,39 @@ namespace JudeWindApp.Controllers
         [HttpPut]
         public async Task EditRole(SysRoleInput input) => await _roleService.EditRole(input);
         /// <summary> 移除權限群組 </summary>
+        /// <param name="rgid">角色id</param>
         [HttpDelete]
-        public async Task DeleteRole(string rgid) => await _roleService.DeleteRole(rgid);
+        public async Task DeleteRole([FromBody] string rgid) => await _roleService.DeleteRole(rgid);
         /// <summary> 是否重名 </summary>
+        /// <param name="roleName">角色名稱</param>
         [HttpHead]
-        public async Task<bool> HadSameRoleName(string roleName) => await _roleService.HadSameName(roleName);
+        public async Task<bool> HadSameRoleName([FromBody] string roleName) => await _roleService.HadSameName(roleName);
         /// <summary> 是否有資料 </summary>
+        /// <param name="rgid">角色id</param>
         [HttpHead]
-        public async Task<bool> IsRoleExist(string rgid) => await _roleService.IsExist(rgid);
+        public async Task<bool> IsRoleExist([FromBody] string rgid) => await _roleService.IsExist(rgid);
         /// <summary> 是否有使用者有此權限 </summary>
+        /// <param name="rgid">角色id</param>
         [HttpHead]
-        public async Task<bool> HadUserInRole(string rgid) => await _roleService.HadUserInRole(rgid);
+        public async Task<bool> HadUserInRole([FromBody] string rgid) => await _roleService.HadUserInRole(rgid);
 
         /// <summary> 取得使用者權限 </summary>
+        /// <param name="userId">使用者Id</param>
         [HttpGet]
-        public async Task<RoleUserOutput> GetUserRole(string userId) => await _roleService.GetUserRole(userId);
+        public async Task<RoleUserOutput> GetUserRole([FromBody] string userId) => await _roleService.GetUserRole(userId);
         /// <summary> 更新使用者權限 </summary>
         [HttpPost]
         public async Task UpgradeUserRole(SysRoleUserInput input) => await _roleService.UpgradeUserRole(input);
         /// <summary> 取得使用者授權 </summary>
+        /// <param name="userId">使用者Id</param>
         [HttpGet]
-        public async Task<UserPermissionOutput> GetUserPermissionInfo(string userId) => await _roleService.GetUserPermissionInfo(userId);
+        public async Task<UserPermissionOutput> GetUserPermissionInfo([FromBody] string userId) => await _roleService.GetUserPermissionInfo(userId);
         /// <summary> 更新授權 </summary>
         [HttpPost]
         public async Task UpgradePermission(SysRolePermissionInput input) => await _roleService.UpgradePermission(input);
 
         /// <summary> 取得全部使用者授權 </summary>
-        [HttpGet("/{page}/{size}")]
+        [HttpGet]
         public async Task<BaseOutput<UserPermissionOutput>> SearchUserPermissionInfo(int page = SysSetting.PageDefult, int size = SysSetting.SizeDefult)
         {
             var _data = await _roleService.SearchUserPermissionInfo();
@@ -123,8 +131,8 @@ namespace JudeWindApp.Controllers
             return result;
         }
         /// <summary> 取得全部使用者權限 </summary>
-        [HttpGet("/{page}/{size}")]
-        public async Task<BaseOutput<RoleUserOutput>> SearchUserRole(int page = SysSetting.PageDefult, int size = SysSetting.SizeDefult)
+        [HttpGet]
+        public async Task<BaseOutput<RoleUserOutput>> SearchUserRole(int page = SysSetting.PageDefult,int size = SysSetting.SizeDefult)
         {
             var _data = await _roleService.SearchUserRole();
             BaseOutput<RoleUserOutput> result = new() { Detail = _data, Page = page, Size = size };
@@ -135,6 +143,7 @@ namespace JudeWindApp.Controllers
 
         #region <-- Login -->
         /// <summary> 使用者登入 </summary>
+        [HttpPost]
         public async Task<LoginResult> UserLogin(UserLogin user)
         {
             user.Ip = IPAddress;

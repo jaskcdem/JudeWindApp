@@ -1,5 +1,9 @@
 ﻿using Common.Interfaces;
+using DataAcxess.LogContext;
+using DataAcxess.ProjectContext;
+using DataAcxess.Repository;
 using JudeWind.Service;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace JudeWindApp.Services
@@ -42,6 +46,27 @@ namespace JudeWindApp.Services
                     services.AddScoped(interfaceType, implementType);
             }
             #endregion
+            return services;
+        }
+        /// <summary> import customs DBContext </summary>
+        public static IServiceCollection AddDBContext(this IServiceCollection services)
+        {
+            //var builder = new ConfigurationBuilder()
+            //                  .SetBasePath(Directory.GetCurrentDirectory())
+            //                  .AddJsonFile("appsettings.json");
+            //var configuration = builder.Build();
+            //services.AddDbContext<ProjectContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<LogContext>(options => options.UseSqlServer(configuration.GetConnectionString("LogConnection")));
+            services.AddDbContext<ProjectContext>();
+            services.AddDbContext<LogContext>();
+            return services;
+        }
+        /// <summary> import customs Repository </summary>
+        public static IServiceCollection AddRepository(this IServiceCollection services)
+        {
+            services.AddSingleton<DecoratorRepository>();
+            services.AddSingleton<EquipRepository>();
+            services.AddSingleton<MagicRepository>();
             return services;
         }
     }

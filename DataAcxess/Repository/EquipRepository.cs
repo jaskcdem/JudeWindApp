@@ -40,9 +40,9 @@ namespace DataAcxess.Repository
                 ];
 
         Dictionary<Weapon, Type> _wepDic = null!;
-        Dictionary<Weapon, Type> WepDic => _wepDic ?? InitWepDic();
+        internal Dictionary<Weapon, Type> WepDic => _wepDic ?? InitWepDic();
         Dictionary<Armor, Type> _armDic = null!;
-        Dictionary<Armor, Type> ArmDic => _armDic ?? InitAmrDic();
+        internal Dictionary<Armor, Type> ArmDic => _armDic ?? InitAmrDic();
         #endregion
 
         #region methods
@@ -95,6 +95,7 @@ namespace DataAcxess.Repository
                 case Weapon.Bow: item = new BaseBow(rank, defName); break;
             }
             SetEquip(item, rank, values);
+            item.Note = defName;
             return item;
         }
         IEquipItem CreateArmor(KeyValuePair<Armor, Type> etype)
@@ -111,6 +112,7 @@ namespace DataAcxess.Repository
                 case Armor.Gloves: item = new BaseGloves(rank, defName); break;
             }
             SetEquip(item, rank, values);
+            item.Note = defName;
             return item;
         }
 

@@ -6,7 +6,16 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(option =>
+{
+    option.JsonSerializerOptions.PropertyNamingPolicy = null;
+    option.JsonSerializerOptions.IgnoreReadOnlyFields = true;
+    option.JsonSerializerOptions.IgnoreReadOnlyProperties = true;
+    // 充許屬性數量不足傳入
+    option.JsonSerializerOptions.AllowTrailingCommas = true;
+});
+builder.Services.AddDBContext();
+builder.Services.AddRepository();
 builder.Services.AddIDataService();
 builder.Services.AddDataService();
 builder.Services.AddScoped(svc => new LogsService());
@@ -29,7 +38,7 @@ builder.Services.AddSwaggerGen(options =>
     });
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    options.IncludeXmlComments(xmlPath);
+    options.IncludeXmlComments(xmlPath, true);
 });
 //global Filter
 builder.Services.AddMvc(options =>
@@ -43,7 +52,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None));
 }
 app.UseHttpsRedirection();
 app.UseAuthorization();

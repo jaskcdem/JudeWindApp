@@ -16,8 +16,4 @@
     <ProjectReference Include="..\JudeWind.Model\JudeWind.Model.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Files\" />
-  </ItemGroup>
-
 </Project>

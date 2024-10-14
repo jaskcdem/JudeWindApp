@@ -11,7 +11,7 @@ namespace JudeWind.Service.Equips
     {
         private readonly EquipRepository _equipRepository = equip;
         private readonly DecoratorRepository _decoratorRepository = decorator;
-        const int StatusDecMax = 3, ElementDecMax = 3, GreateElementDecMax = 1, PhysicDecMax = 1, TotalDecMax = 6;
+        const int StatusDecMax = 1, ElementDecMax = 1, GreateElementDecMax = 1, PhysicDecMax = 1, TotalDecMax = 3;
 
         #region methods
         /// <summary> 裝備箱 </summary>
@@ -71,7 +71,7 @@ namespace JudeWind.Service.Equips
         {
             EquipOutput _result = new();
             for (int i = 1; i <= numbers; i++)
-                _result.Equips.Add(box.Invoke());
+                _result.Equips.Add(new() { Equip = box.Invoke() });
             return _result;
         }
         /// <summary>  </summary>
@@ -97,10 +97,10 @@ namespace JudeWind.Service.Equips
             {
                 _boxInfo.StatusCount = Math.Clamp(_boxInfo.StatusCount, 0, StatusDecMax);
                 _boxInfo.ElementCount = Math.Clamp(_boxInfo.ElementCount, 0, ElementDecMax);
-                _boxInfo.GreatElementCount = _boxInfo.StatusCount + _boxInfo.ElementCount < TotalDecMax
-                   ? Math.Clamp(_boxInfo.GreatElementCount, 0, GreateElementDecMax) : 0;
-                _boxInfo.PhysicCount = _boxInfo.StatusCount + _boxInfo.ElementCount + _boxInfo.GreatElementCount < TotalDecMax
+                _boxInfo.PhysicCount = _boxInfo.StatusCount + _boxInfo.ElementCount < TotalDecMax
                    ? Math.Clamp(_boxInfo.PhysicCount, 0, PhysicDecMax) : 0;
+                _boxInfo.GreatElementCount = _boxInfo.StatusCount + _boxInfo.PhysicCount < TotalDecMax && _boxInfo.ElementCount <= 0
+                   ? Math.Clamp(_boxInfo.GreatElementCount, 0, GreateElementDecMax) : 0;
             }
         }
         /// <summary>  </summary>

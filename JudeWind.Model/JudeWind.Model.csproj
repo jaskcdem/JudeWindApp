@@ -16,8 +16,4 @@
     <ProjectReference Include="..\DataAcxess\DataAcxess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Enums\" />
-  </ItemGroup>
-
 </Project>
