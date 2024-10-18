@@ -46,6 +46,10 @@ builder.Services.AddMvc(options =>
     options.Filters.Add<ExceptionFilter>();
 });
 
+Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
+{
+    webBuilder.UseKestrel(option => option.AddServerHeader = false);
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
