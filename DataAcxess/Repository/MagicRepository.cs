@@ -1,11 +1,12 @@
-﻿using GreenUtility;
+﻿using DataAcxess.Extension;
+using GreenUtility;
 using GreenUtility.Interface;
 using GreenUtility.Magic;
 using static GreenUtility.RPGSetting;
 
 namespace DataAcxess.Repository
 {
-    public class MagicRepository
+    public class MagicRepository : ISampleRepository
     {
         readonly string[] targetTypes = Enum.GetNames(typeof(TargrtType)),
             elementType = Enum.GetNames(typeof(Element)),
@@ -60,7 +61,7 @@ namespace DataAcxess.Repository
         #region <-- Factory -->
         IMagicSkill CreateMagic(Element mtype, TargrtType ttype)
         {
-            short rank = GetRandomRank();
+            short rank = this.GetRandomRank();
             IMagicSkill skill = mtype switch
             {
                 Element.Water => new BaseWaterMagic(rank),
@@ -80,7 +81,7 @@ namespace DataAcxess.Repository
         }
         IMagicSkill CreateGreateMagic(GreatElement mtype, TargrtType ttype)
         {
-            short rank = GetRandomRank();
+            short rank = this.GetRandomRank();
             IMagicSkill skill = mtype switch
             {
                 GreatElement.Plant => new BasePlantMagic(rank),
@@ -93,7 +94,6 @@ namespace DataAcxess.Repository
             skill.ResetName();
             return skill;
         }
-        static short GetRandomRank(int max = 11) => Utility.RandomInt(1, max).ConvertToInt16(1);
         #endregion
     }
 }

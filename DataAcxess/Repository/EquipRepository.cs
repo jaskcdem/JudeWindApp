@@ -1,11 +1,12 @@
-﻿using GreenUtility;
+﻿using DataAcxess.Extension;
+using GreenUtility;
 using GreenUtility.Equip;
 using GreenUtility.Interface;
 using static GreenUtility.RPGSetting;
 
 namespace DataAcxess.Repository
 {
-    public class EquipRepository
+    public class EquipRepository : ISampleRepository
     {
         #region private members
         readonly List<(Weapon wep, string defName, (CharParameter para, int basePoint, int growPoint)[] values)> WepList
@@ -85,7 +86,7 @@ namespace DataAcxess.Repository
         IEquipItem CreateWeapon(KeyValuePair<Weapon, Type> etype)
         {
             IEquipItem item = null!;
-            short rank = GetRandomRank();
+            short rank = this.GetRandomRank();
             var query = WepList.Where(w => w.wep == etype.Key);
             var (wep, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
             switch (etype.Key)
@@ -103,7 +104,7 @@ namespace DataAcxess.Repository
             IEquipItem item = null!;
             var query = ArmList.Where(w => w.amr == etype.Key);
             var (wep, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
-            short rank = GetRandomRank();
+            short rank = this.GetRandomRank();
             switch (etype.Key)
             {
                 case Armor.Hat: item = new BaseHat(rank, defName); break;
@@ -133,7 +134,6 @@ namespace DataAcxess.Repository
                 }
             }
         }
-        static short GetRandomRank(int max = 11) => Utility.RandomInt(1, max).ConvertToInt16(1);
         #endregion
     }
 }
