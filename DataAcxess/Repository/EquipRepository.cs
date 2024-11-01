@@ -47,9 +47,9 @@ namespace DataAcxess.Repository
         #endregion
 
         #region methods
-        public IEquipItem GetRandomEquip(ShopType shopType)
+        public BaseEquip GetRandomEquip(ShopType shopType)
         {
-            IEquipItem item = shopType switch
+            BaseEquip item = shopType switch
             {
                 ShopType.Weapon => CreateWeapon(WepDic.ElementAt(Utility.RandomInt(WepDic.Count))),
                 ShopType.Armor => CreateArmor(ArmDic.ElementAt(Utility.RandomInt(ArmDic.Count))),
@@ -59,10 +59,10 @@ namespace DataAcxess.Repository
                     _ => CreateWeapon(WepDic.ElementAt(Utility.RandomInt(WepDic.Count))),
                 },
             };
-            return item ?? throw new ArgumentNullException(message: "Undefind Equip Type", paramName: "GetRandomEquip");
+            return item ?? throw new ArgumentNullException(nameof(shopType), "Undifind Equip type");
         }
-        public IEquipItem GetWeapon(Weapon etype) => CreateWeapon(new KeyValuePair<Weapon, Type>(etype, WepDic[etype]));
-        public IEquipItem GetArmor(Armor etype) => CreateArmor(new KeyValuePair<Armor, Type>(etype, ArmDic[etype]));
+        public BaseEquip GetWeapon(Weapon etype) => CreateWeapon(new KeyValuePair<Weapon, Type>(etype, WepDic[etype]));
+        public BaseEquip GetArmor(Armor etype) => CreateArmor(new KeyValuePair<Armor, Type>(etype, ArmDic[etype]));
         #endregion
 
         #region <-- Factory -->
@@ -83,9 +83,9 @@ namespace DataAcxess.Repository
             _armDic.Add(Armor.Gloves, typeof(BaseGloves));
             return _armDic;
         }
-        IEquipItem CreateWeapon(KeyValuePair<Weapon, Type> etype)
+        BaseEquip CreateWeapon(KeyValuePair<Weapon, Type> etype)
         {
-            IEquipItem item = null!;
+            BaseEquip item = null!;
             short rank = this.GetRandomRank();
             var query = WepList.Where(w => w.wep == etype.Key);
             var (wep, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
@@ -99,9 +99,9 @@ namespace DataAcxess.Repository
             item.Note = defName;
             return item;
         }
-        IEquipItem CreateArmor(KeyValuePair<Armor, Type> etype)
+        BaseEquip CreateArmor(KeyValuePair<Armor, Type> etype)
         {
-            IEquipItem item = null!;
+            BaseEquip item = null!;
             var query = ArmList.Where(w => w.amr == etype.Key);
             var (wep, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
             short rank = this.GetRandomRank();
@@ -117,7 +117,7 @@ namespace DataAcxess.Repository
             return item;
         }
 
-        static void SetEquip(IEquipItem item, short rank, (CharParameter para, int basePoint, int growPoint)[] values)
+        static void SetEquip(BaseEquip item, short rank, (CharParameter para, int basePoint, int growPoint)[] values)
         {
             if (item == null) return;
             foreach (var (para, basePoint, growPoint) in values)

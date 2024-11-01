@@ -1,8 +1,10 @@
 ﻿using DataAcxess.ProjectContext;
 using DataAcxess.Repository;
+using GreenUtility.Equip;
 using GreenUtility.Extension;
-using GreenUtility.Interface;
+using JudeWind.Model.Base;
 using JudeWind.Model.Equips;
+using JudeWind.Service.Extension;
 using static GreenUtility.RPGSetting;
 
 namespace JudeWind.Service.Equips
@@ -11,7 +13,6 @@ namespace JudeWind.Service.Equips
     {
         private readonly EquipRepository _equipRepository = equip;
         private readonly DecoratorRepository _decoratorRepository = decorator;
-        const int StatusDecMax = 1, ElementDecMax = 1, GreateElementDecMax = 1, PhysicDecMax = 1, TotalDecMax = 3;
 
         #region methods
         /// <summary> 裝備箱 </summary>
@@ -67,7 +68,7 @@ namespace JudeWind.Service.Equips
 
         #region private method
         /// <summary>  </summary>
-        private static EquipOutput Boxing(int numbers, Func<IEquipItem> box)
+        private static EquipOutput Boxing(int numbers, Func<BaseEquip> box)
         {
             EquipOutput _result = new();
             for (int i = 1; i <= numbers; i++)
@@ -75,14 +76,14 @@ namespace JudeWind.Service.Equips
             return _result;
         }
         /// <summary>  </summary>
-        private void DecorateBoxing(ref DecoratorEquipOutput result, DecoratorInfo boxInfo, Func<IEquipItem> box)
+        private void DecorateBoxing(ref DecoratorEquipOutput result, DecoratorEquipBoxInfo boxInfo, Func<BaseEquip> box)
         {
             DecoratorBuilder builder;
             for (int i = 1; i <= boxInfo.Numbers; i++)
             {
                 DecoratorEquipInfo _equip = new() { Equip = box.Invoke() };
                 builder = CreateDecorateBuilder(_equip.Equip, boxInfo);
-                _equip.Equip = builder.BuildEquip();
+                _equip.Equip = (BaseEquip)builder.BuildEquip();
                 _equip.UnhealthyStatuses = builder.GetUnhealthyStatuses();
                 _equip.Elements = builder.GetElements();
                 _equip.GreatElements = builder.GetGreatElements();
@@ -94,28 +95,14 @@ namespace JudeWind.Service.Equips
         private static void LimitDecorateCount(DecoratorEquipInput input)
         {
             foreach (var _boxInfo in input.DecorateBox)
-            {
-                _boxInfo.StatusCount = Math.Clamp(_boxInfo.StatusCount, 0, StatusDecMax);
-                _boxInfo.ElementCount = Math.Clamp(_boxInfo.ElementCount, 0, ElementDecMax);
-                _boxInfo.PhysicCount = _boxInfo.StatusCount + _boxInfo.ElementCount < TotalDecMax
-                   ? Math.Clamp(_boxInfo.PhysicCount, 0, PhysicDecMax) : 0;
-                _boxInfo.GreatElementCount = _boxInfo.StatusCount + _boxInfo.PhysicCount < TotalDecMax && _boxInfo.ElementCount <= 0
-                   ? Math.Clamp(_boxInfo.GreatElementCount, 0, GreateElementDecMax) : 0;
-            }
+                ServiceExtension.LimitDecorateCount(_boxInfo);
         }
         /// <summary>  </summary>
-        private DecoratorBuilder CreateDecorateBuilder(IEquipItem equip, DecoratorInfo boxInfo)
+        private DecoratorBuilder CreateDecorateBuilder(BaseEquip equip, DecoratorEquipBoxInfo boxInfo)
         {
             DecoratorBuilder builder = new();
             builder.SetEquip(equip);
-            for (int j = 1; j <= boxInfo.GreatElementCount; j++)
-                builder.AddPrev(_decoratorRepository.GetDecoratorItem(DecoratorRepository.DecoratorType.GreatElement));
-            for (int j = 1; j <= boxInfo.ElementCount; j++)
-                builder.AddPrev(_decoratorRepository.GetDecoratorItem(DecoratorRepository.DecoratorType.Element));
-            for (int j = 1; j <= boxInfo.StatusCount; j++)
-                builder.AddPrev(_decoratorRepository.GetDecoratorItem(DecoratorRepository.DecoratorType.Status));
-            for (int j = 1; j <= boxInfo.PhysicCount; j++)
-                builder.AddNext(_decoratorRepository.GetDecoratorItem(DecoratorRepository.DecoratorType.Physic));
+            ServiceExtension.ImportDecorateBuilderItem(builder, _decoratorRepository, boxInfo);
             return builder;
         }
         #endregion

@@ -1,9 +1,5 @@
-﻿using GreenUtility.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GreenUtility.Equip;
+using JudeWind.Model.Base;
 using static GreenUtility.RPGSetting;
 
 namespace JudeWind.Model.Equips
@@ -15,14 +11,14 @@ namespace JudeWind.Model.Equips
         /// <summary> Total Number </summary>
         public int Numbers { get; set; }
 
-        public Weapon? Weapon { get; set; }
+        public Weapon? Weapon { get; set; } = null;
 
-        public Armor? Armor { get; set; }
+        public Armor? Armor { get; set; } = null;
     }
     /// <summary> Equips info </summary>
     public class EquipInfo
     {
-        public IEquipItem Equip { get; set; } = null!;
+        public BaseEquip Equip { get; set; } = null!;
         public string TypeName { get => Equip.GetType().Name; }
     }
     /// <summary> Equips </summary>
@@ -38,34 +34,7 @@ namespace JudeWind.Model.Equips
     public class DecoratorEquipInput
     {
         /// <summary> Decorate infos </summary>
-        public List<DecoratorInfo> DecorateBox { get; set; } = [];
-    }
-
-    /// <summary> Decorate info </summary>
-    public class DecoratorInfo
-    {
-        /// <summary> 隨機數量 </summary>
-        public int Numbers { get; set; }
-
-        public Weapon? Weapon { get; set; }
-
-        public Armor? Armor { get; set; }
-
-        /// <summary> 附加狀態數 </summary>
-        /// <remarks>Max = 1</remarks>
-        public int StatusCount { get; set; }
-
-        /// <summary> 附加屬性數 </summary>
-        /// <remarks>Max = 1</remarks>
-        public int ElementCount { get; set; }
-
-        /// <summary> 附加上位屬性數 </summary>
-        /// <remarks>Max = 1, can't bind if <see cref="ElementCount"/> not zero</remarks>
-        public int GreatElementCount { get; set; }
-
-        /// <summary> 附加物理屬性數 </summary>
-        /// <remarks>Max = 1</remarks>
-        public int PhysicCount { get; set; }
+        public List<DecoratorEquipBoxInfo> DecorateBox { get; set; } = [];
     }
 
     /// <summary> Decorate Equip </summary>
@@ -78,7 +47,7 @@ namespace JudeWind.Model.Equips
     /// <summary> Decorate Equip info </summary>
     public class DecoratorEquipInfo
     {
-        public IEquipItem Equip { get; set; } = null!;
+        public BaseEquip Equip { get; set; } = null!;
         public string TypeName { get => Equip.GetType().Name; }
         public List<UnhealthyStatus> UnhealthyStatuses = [];
         public List<Element> Elements = [];

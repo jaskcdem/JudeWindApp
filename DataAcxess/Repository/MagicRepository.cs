@@ -73,7 +73,7 @@ namespace DataAcxess.Repository
                 Element.Light => new BaseLightMagic(rank),
                 Element.Dark => new BaseDarkMagic(rank),
                 Element.Star => new BaseStarMagic(rank),
-                _ => throw new ArgumentNullException(message: "Undefind Element Type", paramName: "GetMagic")
+                _ => throw new ArgumentNullException(nameof(mtype), "Undefind Element Type")
             };
             skill.TargrtType = ttype;
             skill.ResetName();
@@ -88,7 +88,7 @@ namespace DataAcxess.Repository
                 GreatElement.Earth => new BasePlantMagic(rank),
                 GreatElement.Electric => new BasePlantMagic(rank),
                 GreatElement.Decay => new BasePlantMagic(rank),
-                _ => throw new ArgumentNullException(message: "Undefind Great Element Type", paramName: "GetMagic")
+                _ => throw new ArgumentNullException(nameof(mtype), "Undefind Great Element Type")
             };
             skill.TargrtType = ttype;
             skill.ResetName();
