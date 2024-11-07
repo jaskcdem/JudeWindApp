@@ -1,0 +1,442 @@
+---
+swagger: "1.0"
+info:
+  description: "This is a sample app JudeWindApp."
+  version: "1.0.5"
+  title: "Swagger JudeWindApp"
+  termsOfService: "https://jaskcdem.github.io/JudeWindApp/"
+  contact:
+    email: "jaskc2577@gmail.com"
+  license:
+    name: "Apache 1.0"
+    url: "https://jaskcdem.github.io/JudeWindApp/LICENSE.txt"
+host: "JudeWindApp.swagger.io"
+basePath: "/v1"
+tags:
+- name: "Equip"
+  description: "Equip Box"
+  externalDocs:
+    description: "looking more?"
+    url: ""
+- name: "Magic"
+  description: "Magic Box"
+  externalDocs:
+    description: "looking more?"
+    url: ""
+- name: "Potion"
+  description: "Potion Box"
+  externalDocs:
+    description: "looking more?"
+    url: ""
+schemes:
+- "https"
+paths:
+  /Equip/RandomEquipBox:
+    post:
+      tags:
+      - "Equip"
+      summary: "裝備箱"
+      description: ""
+      operationId: "reb"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: ""
+        required: true
+        schema:
+          $ref: "#/definitions/EquipRandomInput"
+      responses:
+        200:
+          description: "successful"
+          schema:
+            $ref: "#/definitions/EquipOutput"
+      security:
+      - app_auth:
+        - "write:app"
+        - "read:app"
+  /Equip/RandomDecEquipBox:
+    post:
+      tags:
+      - "Equip"
+      summary: "彩蛋裝備箱"
+      description: ""
+      operationId: "rdeb"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: ""
+        required: true
+        schema:
+          $ref: "#/definitions/DecoratorEquipInput"
+      responses:
+        200:
+          description: "successful"
+          schema:
+            $ref: "#/definitions/DecoratorEquipOutput"
+      security:
+      - app_auth:
+        - "write:app"
+        - "read:app"
+  /Magic:
+    post:
+      tags:
+      - "Magic"
+      summary: "Add a new Magic"
+      description: ""
+      operationId: "addMagic"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: ""
+        required: true
+        schema:
+          $ref: "#/definitions/EquipRandomInput"
+      responses:
+        405:
+          description: "Invalid input"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
+    put:
+      tags:
+      - "Magic"
+      summary: "Update an existing Magic"
+      description: ""
+      operationId: "updateMagic"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: ""
+        schema:
+          $ref: "#/definitions/EquipRandomInput"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "PetMagic not found"
+        405:
+          description: "Validation exception"
+      security:
+      - petstore_auth:
+        - "write:app"
+        - "read:app"
+    get:
+      tags:
+      - "Magic"
+      summary: "Finds Magic by Element"
+      description: ""
+      operationId: "findMagicByElement"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Element"
+        in: "query"
+        description: ""
+        required: true
+        $ref: "#/definitions/Element"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/EquipOutput"
+        400:
+          description: "Invalid status value"
+      security:
+      - petstore_auth:
+        - "write:app"
+        - "read:app"
+    delete:
+      tags:
+      - "Magic"
+      summary: "Deletes a Magic"
+      description: ""
+      operationId: "deleteMagic"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "MagicId"
+        in: "path"
+        description: "Magic id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Magic not found"
+      security:
+      - petstore_auth:
+        - "write:app"
+        - "read:app"
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+  app_auth:
+    type: "oauth2"
+    authorizationUrl: ""
+    flow: "implicit"
+    scopes:
+      read: "read"
+      write: "modify"
+definitions:
+  Weapon:
+    type: "integer"
+    enum:
+    - "0"
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+    - "13"
+    - "14"
+    - "15"
+    - "16"
+    - "17"
+    - "18"
+    - "19"
+    - "20"
+  Armor:
+    type: "integer"
+    enum:
+    - "0"
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+  Element:
+    type: "integer"
+    enum:
+    - "0"
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+  ElementLevel:
+    type: "integer"
+    enum:
+    - "0"
+    - "1"
+  GreatElement:
+    type: "integer"
+    enum:
+    - "0"
+    - "1"
+    - "2"
+    - "3"
+  TargrtType:
+    type: "integer"
+    enum:
+    - "0"
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+    - "13"
+    - "14"
+    - "15"
+    - "16"
+    - "17"
+    - "18"
+    - "19"
+  UnhealthyStatus:
+    type: "integer"
+    enum:
+    - "0"
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+  PhysicType:
+    type: "integer"
+    enum:
+    - "0"
+    - "1"
+    - "2"
+  EquipRandomInput:
+    type: "object"
+    required:
+    - "Numbers"
+    properties:
+      Numbers:
+        type: "integer"
+        format: "int32"
+      Weapon:
+        $ref: "#/definitions/Weapon"
+      Armor:
+        $ref: "#/definitions/Armor"
+  DecoratorEquipBoxInfo:
+    type: "object"
+    required:
+    - "Numbers"
+    properties:
+      Numbers:
+        type: "integer"
+        format: "int32"
+      StatusCount:
+        type: "integer"
+        format: "int32"
+      ElementCount:
+        type: "integer"
+        format: "int32"
+      GreatElementCount:
+        type: "integer"
+        format: "int32"
+      PhysicCount:
+        type: "integer"
+        format: "int32"
+      Weapon:
+        $ref: "#/definitions/Weapon"
+      Armor:
+        $ref: "#/definitions/Armor"
+  DecoratorEquipInput:
+    type: "object"
+    properties:
+      DecorateBox:
+        type: "array"
+        items:
+          xml:
+            name: "DecoratorBox"
+          $ref: "#/definitions/DecoratorEquipBoxInfo"
+  BaseEquip:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+        nullable: true
+      Price:
+        type: "integer"
+        format: "int64"
+      Note:
+        type: "string"
+        nullable: true
+      Mhp:
+        type: "integer"
+        format: "int32"
+      Mmp:
+        type: "integer"
+        format: "int32"
+      Atk:
+        type: "integer"
+        format: "int32"
+      Def:
+        type: "integer"
+        format: "int32"
+      Mat:
+        type: "integer"
+        format: "int32"
+      Mdf:
+        type: "integer"
+        format: "int32"
+      Agi:
+        type: "integer"
+        format: "int32"
+      Rank:
+        type: "integer"
+        format: "int32"
+  EquipInfo:
+    type: "object"
+    properties:
+      Equip:
+        $ref: "#/definitions/BaseEquip"
+  EquipOutput:
+    type: "object"
+    properties:
+      Equips:
+        type: "array"
+        items:
+          $ref: "#/definitions/EquipInfo"
+  DecoratorEquipInfo:
+    type: "object"
+    properties:
+      Equip:
+        $ref: "#/definitions/BaseEquip"
+      UnhealthyStatuses:
+        type: "array"
+        items:
+          $ref: "#/definitions/UnhealthyStatus"
+      Elements:
+        type: "array"
+        items:
+          $ref: "#/definitions/Element"
+      GreatElements:
+        type: "array"
+        items:
+          $ref: "#/definitions/GreatElement"
+      PhysicTypes:
+        type: "array"
+        items:
+          $ref: "#/definitions/PhysicType"
+  DecoratorEquipOutput:
+    type: "object"
+    properties:
+      Equips:
+        type: "array"
+        items:
+          $ref: "#/definitions/DecoratorEquipInfo"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: ""
