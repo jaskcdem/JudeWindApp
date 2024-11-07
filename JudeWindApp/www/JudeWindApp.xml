@@ -1,0 +1,385 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JudeWindApp</name>
+    </assembly>
+    <members>
+        <member name="T:JudeWindApp.Attributes.AppLogFilterAttribute">
+            <summary> WebAPI Log filter </summary>
+        </member>
+        <member name="M:JudeWindApp.Attributes.AppLogFilterAttribute.#ctor(JudeWindApp.Services.LogsService,JudeWind.Service.Register.UserRecordService,System.String)">
+            <summary> WebAPI Log filter </summary>
+        </member>
+        <member name="P:JudeWindApp.Attributes.AppLogFilterAttribute.SystemName">
+            <summary> 系統名稱 </summary>
+        </member>
+        <member name="M:JudeWindApp.Attributes.AppLogFilterAttribute.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)">
+            <summary> 當WebAPI的控制器剛被啟動和結束動作，會進入這個事件中 </summary>
+            <param name="context"></param>
+            <param name="next"></param>
+        </member>
+        <member name="M:JudeWindApp.Attributes.AppLogFilterAttribute.ActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>  當WebAPI的控制器剛被啟動的時候，會進入至這個覆寫的事件中 </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:JudeWindApp.Attributes.AppLogFilterAttribute.ActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary> 當WebAPI的控制器結束動作，會進入這個覆寫的事件中 </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:JudeWindApp.Attributes.AppResultFilter">
+            <summary> WebAPI result filter </summary>
+        </member>
+        <member name="M:JudeWindApp.Attributes.AppResultFilter.OnResultExecuted(Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext)">
+            <summary>  </summary>
+        </member>
+        <member name="M:JudeWindApp.Attributes.AppResultFilter.OnResultExecuting(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext)">
+            <summary>  </summary>
+        </member>
+        <member name="T:JudeWindApp.Attributes.BypassApiResultAttribute">
+            <summary> 不用預設回傳的result </summary>
+        </member>
+        <member name="T:JudeWindApp.Attributes.ExceptionFilter">
+            <summary> 例外處理AOP </summary>
+        </member>
+        <member name="M:JudeWindApp.Attributes.ExceptionFilter.OnExceptionAsync(Microsoft.AspNetCore.Mvc.Filters.ExceptionContext)">
+            <summary> 攔截Exception事件 </summary>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
+        <member name="T:JudeWindApp.Attributes.RolePermissionVaildAttribute">
+            <summary>權限檢核Attribute </summary>
+        </member>
+        <member name="M:JudeWindApp.Attributes.RolePermissionVaildAttribute.#ctor(JudeWind.Service.Register.UserInfoService)">
+            <summary>權限檢核Attribute </summary>
+        </member>
+        <member name="F:JudeWindApp.Attributes.RolePermissionVaildAttribute.MenuFuncControllerPairs">
+            <summary> MenuFunc(key) - Controller(value) </summary>
+        </member>
+        <member name="M:JudeWindApp.Attributes.RolePermissionVaildAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>  </summary>
+        </member>
+        <member name="T:JudeWindApp.Attributes.OpenPermissionAttribute">
+            <summary> 權限檢核特例公開Attribute </summary>
+        </member>
+        <member name="M:JudeWindApp.Attributes.OpenPermissionAttribute.#ctor">
+            <summary> 權限檢核特例公開Attribute </summary>
+        </member>
+        <member name="M:JudeWindApp.Attributes.OpenPermissionAttribute.#ctor(System.String[])">
+            <summary> 權限檢核特例公開Attribute </summary>
+        </member>
+        <member name="M:JudeWindApp.Attributes.OpenPermissionAttribute.IsAllow(JudeWind.Service.Register.UserInfoService,System.String)">
+            <summary>  </summary>
+        </member>
+        <member name="T:JudeWindApp.Attributes.ValidateModelAttribute">
+            <summary> Validate Model </summary>
+        </member>
+        <member name="M:JudeWindApp.Attributes.ValidateModelAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>  </summary>
+        </member>
+        <member name="T:JudeWindApp.Controllers.BaseApiController">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.Controllers.BaseApiController.UserId">
+            <summary> 使用者帳號 </summary>
+        </member>
+        <member name="P:JudeWindApp.Controllers.BaseApiController.IPAddress">
+            <summary>  </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.BaseApiController.DownloadFile(System.String)">
+            <summary>  </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.BaseApiController.DownloadPhysicalFile(System.String)">
+            <summary>  </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.BaseApiController.DownloadFileStream(System.IO.Stream,System.String,System.String)">
+            <summary>  </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.BaseApiController.DownloadFileContent(System.Byte[],System.String,System.String)">
+            <summary>  </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.BaseApiController.GetUserId">
+            <summary> 取回使用者帳號 </summary>
+        </member>
+        <member name="T:JudeWindApp.Controllers.EquipController">
+            <summary> Equip Box </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.EquipController.#ctor(JudeWind.Service.Equips.EquipService)">
+            <summary> Equip Box </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.EquipController.RandomEquipBox(JudeWind.Model.Equips.EquipRandomInput)">
+            <summary> 裝備箱 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.EquipController.RandomWeaponBox(JudeWind.Model.Equips.EquipRandomInput)">
+            <summary> 武器箱 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.EquipController.RandomArmorBox(JudeWind.Model.Equips.EquipRandomInput)">
+            <summary> 防具箱 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.EquipController.RandomDecEquipBox(JudeWind.Model.Equips.DecoratorEquipInput)">
+            <summary> 彩蛋裝備箱 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.EquipController.RandomDecWeaponBox(JudeWind.Model.Equips.DecoratorEquipInput)">
+            <summary> 彩蛋武器箱 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.EquipController.RandomDecArmorBox(JudeWind.Model.Equips.DecoratorEquipInput)">
+            <summary> 彩蛋防具箱 </summary>
+        </member>
+        <member name="T:JudeWindApp.Controllers.MagicController">
+            <summary> Magic Box </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.MagicController.#ctor(JudeWind.Service.Skill.MagicService)">
+            <summary> Magic Box </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.MagicController.RandomMagic(JudeWind.Model.Skill.MagicRandomInput)">
+            <summary> 魔法箱 </summary>
+            <remarks>Not use: <see cref="P:JudeWind.Model.Skill.MagicRandomInput.Level"/></remarks>
+        </member>
+        <member name="M:JudeWindApp.Controllers.MagicController.RanderElementMagic(JudeWind.Model.Skill.MagicRandomInput)">
+            <summary> 魔法箱 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.MagicController.ElementMagic(JudeWind.Model.Skill.MagicBaseInput)">
+            <summary> 魔法箱 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.MagicController.GreatElementMagic(JudeWind.Model.Skill.MagicGreateInput)">
+            <summary> 魔法箱 </summary>
+        </member>
+        <member name="T:JudeWindApp.Controllers.MiniController">
+            <summary> Mini game (maybe) </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.MiniController.#ctor(JudeWind.Service.MiniPlay.ClassesService)">
+            <summary> Mini game (maybe) </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.MiniController.GetTree(JudeWind.Model.MiniPlay.ClassesTreeInput)">
+            <summary> 職業樹 </summary>
+        </member>
+        <member name="T:JudeWindApp.Controllers.MutipleFileController">
+            <summary>  </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.MutipleFileController.#ctor(Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>  </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.MutipleFileController.Upload(System.Collections.Generic.ICollection{Microsoft.AspNetCore.Http.IFormFile},JudeWind.Model.Files.UploadFileInput)">
+            <summary>  </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.MutipleFileController.DownloadDoc(System.String)">
+            <summary>  </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.MutipleFileController.DownloadImg(System.String)">
+            <summary>  </summary>
+        </member>
+        <member name="T:JudeWindApp.Controllers.PotionController">
+            <summary> Potion Box </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.PotionController.#ctor(JudeWind.Service.Items.PotionService)">
+            <summary> Potion Box </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.PotionController.RandomPotionBox(JudeWind.Model.Items.ClassicPotionRandomInput)">
+            <summary> 藥水箱 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.PotionController.RandomDecPotionBox(JudeWind.Model.Items.DecoratorClassicPotionInput)">
+            <summary> 彩蛋藥水箱 </summary>
+        </member>
+        <member name="T:JudeWindApp.Controllers.SelfResearchController">
+            <summary> something note </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SelfResearchController.PathCombine">
+            <summary> <see cref="M:System.IO.Path.Combine(System.String,System.String)"/> </summary>
+        </member>
+        <member name="T:JudeWindApp.Controllers.SystemController">
+            <summary> System Info </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.#ctor(JudeWind.Service.DbSystem.DbsysService,JudeWind.Service.Register.UserInfoService,JudeWind.Service.DbSystem.RoleService,JudeWind.Service.Register.LoginService)">
+            <summary> System Info </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.GetTypes">
+            <summary> 取得系統類別 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.AddSysType(JudeWind.Model.DbSystem.SysTypeInput)">
+            <summary> 新增系統類別 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.EditSysType(JudeWind.Model.DbSystem.SysTypeInput)">
+            <summary> 編輯系統類別 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.DisableType(System.String)">
+            <summary> 關閉系統類別 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.GetCodes(System.String)">
+            <summary> 取得系統代碼 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.AddCode(JudeWind.Model.DbSystem.SysCodeInput)">
+            <summary> 新增系統代碼 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.EditCode(JudeWind.Model.DbSystem.SysCodeInput)">
+            <summary> 編輯系統代碼 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.DisableCode(JudeWind.Model.DbSystem.SysCodeInput)">
+            <summary> 關閉系統代碼 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.GetSettings(JudeWind.Model.DbSystem.SysSettingPKey)">
+            <summary> 取得系統設定 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.AddSetting(JudeWind.Model.DbSystem.SysSettingInput)">
+            <summary> 新增系統設定 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.EditSetting(JudeWind.Model.DbSystem.SysSettingInput)">
+            <summary> 編輯系統設定 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.RemoveSettings(JudeWind.Model.DbSystem.SysSettingPKey)">
+            <summary> 移除系統設定 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.GetUserInfo(System.String)">
+            <summary> 取得使用者資料 </summary>
+            <param name="userId">使用者Id</param>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.NewUser(JudeWind.Model.DbSystem.UserInfoInput)">
+            <summary> 新增使用者 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.UpgradeUser(JudeWind.Model.DbSystem.UserInfoInput)">
+            <summary> 編輯使用者 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.CheckUserApply(JudeWind.Model.DbSystem.UserApplyCheck)">
+            <summary> 使用者啟用/關閉 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.ChangePsw(JudeWind.Model.DbSystem.ChangePswInput)">
+            <summary> 使用者變更密碼 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.ForgetPsw(System.String)">
+            <summary> 使用者忘記密碼 </summary>
+            <param name="userId">使用者Id</param>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.GetRoles">
+            <summary> 權限群組清單 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.AddRole(JudeWind.Model.DbSystem.SysRoleInput)">
+            <summary> 新增權限群組 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.EditRole(JudeWind.Model.DbSystem.SysRoleInput)">
+            <summary> 編輯權限群組 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.DeleteRole(System.String)">
+            <summary> 移除權限群組 </summary>
+            <param name="rgid">角色id</param>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.HadSameRoleName(System.String)">
+            <summary> 是否重名 </summary>
+            <param name="roleName">角色名稱</param>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.IsRoleExist(System.String)">
+            <summary> 是否有資料 </summary>
+            <param name="rgid">角色id</param>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.HadUserInRole(System.String)">
+            <summary> 是否有使用者有此權限 </summary>
+            <param name="rgid">角色id</param>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.GetUserRole(System.String)">
+            <summary> 取得使用者權限 </summary>
+            <param name="userId">使用者Id</param>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.UpgradeUserRole(JudeWind.Model.DbSystem.SysRoleUserInput)">
+            <summary> 更新使用者權限 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.GetUserPermissionInfo(System.String)">
+            <summary> 取得使用者授權 </summary>
+            <param name="userId">使用者Id</param>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.UpgradePermission(JudeWind.Model.DbSystem.SysRolePermissionInput)">
+            <summary> 更新授權 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.SearchUserPermissionInfo(System.Int32,System.Int32)">
+            <summary> 取得全部使用者授權 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.SearchUserRole(System.Int32,System.Int32)">
+            <summary> 取得全部使用者權限 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.UserLogin(JudeWind.Model.DbSystem.UserLogin)">
+            <summary> 使用者登入 </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.SystemController.GetSysCodeTree(System.Collections.Generic.List{JudeWind.Model.DbSystem.SysCodeOutput})">
+            <summary> 取得系統代碼樹 </summary>
+        </member>
+        <member name="T:JudeWindApp.Controllers.WeatherForecastController">
+            <summary> sample controller </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.WeatherForecastController.#ctor(Microsoft.Extensions.Logging.ILogger{JudeWindApp.Controllers.WeatherForecastController})">
+            <summary> sample controller </summary>
+        </member>
+        <member name="M:JudeWindApp.Controllers.WeatherForecastController.Get">
+            <summary> sample Controller method </summary>
+        </member>
+        <member name="T:JudeWindApp.Services.LogsService">
+            <summary> 登入邏輯 </summary>
+        </member>
+        <member name="M:JudeWindApp.Services.LogsService.#ctor">
+            <summary>  </summary>
+        </member>
+        <member name="M:JudeWindApp.Services.LogsService.WriteApiLog(JudeWindApp.ViewModel.LogResultModel)">
+            <summary> WriteApiLog </summary>
+            <param name="logResult"></param>
+            <returns></returns>
+        </member>
+        <member name="M:JudeWindApp.Services.LogsService.GetSourceOrigin(System.String)">
+            <summary> 將取得的網址，取出網域 </summary>
+            <param name="strOrigin"></param>
+            <returns></returns>
+        </member>
+        <member name="T:JudeWindApp.Services.ServiceExtension">
+            <summary>  </summary>
+        </member>
+        <member name="M:JudeWindApp.Services.ServiceExtension.AddDataService(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary> import customs services </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:JudeWindApp.Services.ServiceExtension.AddIDataService(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary> import customs services </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:JudeWindApp.Services.ServiceExtension.AddDBContext(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary> import customs DBContext </summary>
+        </member>
+        <member name="M:JudeWindApp.Services.ServiceExtension.AddRepository(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary> import customs Repository </summary>
+        </member>
+        <member name="T:JudeWindApp.ViewModel.LogResultModel">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.SystemName">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.ControllerName">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.ActionName">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.Source">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.Header">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.StartTime">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.EndTime">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.Input">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.Output">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.UserId">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.SessionID">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.Exception">
+            <summary>  </summary>
+        </member>
+        <member name="P:JudeWindApp.ViewModel.LogResultModel.Second">
+            <summary>  </summary>
+        </member>
+    </members>
+</doc>

@@ -1,12 +1,15 @@
 ﻿using Common;
 using JudeWindApp.Attributes;
+#if !DEBUG
+//using Microsoft.AspNetCore.Authorization;
+# endif
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 
 namespace JudeWindApp.Controllers
 {
 #if !DEBUG
-    [Authorize]
+    //[Authorize]
 #endif
     /// <summary>  </summary>
     [Route("[controller]/[action]")]
