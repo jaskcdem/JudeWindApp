@@ -1,5 +1,5 @@
 ---
-swagger: "1.0"
+swagger: "2.0"
 info:
   description: "This is a sample app JudeWindApp."
   version: "1.0.5"
@@ -8,7 +8,7 @@ info:
   contact:
     email: "jaskc2577@gmail.com"
   license:
-    name: "Apache 1.0"
+    name: "MIT"
     url: "https://jaskcdem.github.io/JudeWindApp/LICENSE.txt"
 host: "JudeWindApp.swagger.io"
 basePath: "/v1"
