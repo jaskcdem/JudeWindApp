@@ -20,6 +20,3 @@
 1. download or clone code
 2. open on Visual Studio
 3. run in debug mode
-
-### WebSite
-[Here](/JudeWindApp/www/JudeWindApp.exe)
