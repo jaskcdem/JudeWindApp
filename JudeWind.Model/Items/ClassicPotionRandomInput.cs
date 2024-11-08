@@ -1,5 +1,5 @@
 ﻿using DataAcxess.Repository;
-using GreenUtility.Interface;
+using GreenUtility.Potion;
 using JudeWind.Model.Base;
 using static GreenUtility.RPGSetting;
 
@@ -17,7 +17,7 @@ namespace JudeWind.Model.Items
     /// <summary> Classic Potions info </summary>
     public class ClassicPotionInfo
     {
-        public IPotion Potion { get; set; } = null!;
+        public BasePotion Potion { get; set; } = null!;
         public string TypeName { get => Potion.GetType().Name; }
     }
     /// <summary> Classic Potions </summary>
@@ -46,7 +46,7 @@ namespace JudeWind.Model.Items
     /// <summary> Decorate Classic Potion info </summary>
     public class DecoratorClassicPotionInfo
     {
-        public IPotion Potion { get; set; } = null!;
+        public BasePotion Potion { get; set; } = null!;
         public string TypeName { get => Potion.GetType().Name; }
         public List<UnhealthyStatus> UnhealthyStatuses = [];
         public List<Element> Elements = [];

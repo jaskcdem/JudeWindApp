@@ -1,7 +1,6 @@
 ﻿using DataAcxess.Extension;
 using GreenUtility;
 using GreenUtility.Equip;
-using GreenUtility.Interface;
 using static GreenUtility.RPGSetting;
 
 namespace DataAcxess.Repository
@@ -9,6 +8,9 @@ namespace DataAcxess.Repository
     public class EquipRepository : ISampleRepository
     {
         #region private members
+        readonly string[] weaponTypes = Enum.GetNames(typeof(Weapon)),
+            armorType = Enum.GetNames(typeof(Armor));
+
         readonly List<(Weapon wep, string defName, (CharParameter para, int basePoint, int growPoint)[] values)> WepList
            = [(Weapon.Sword, "魔法騎士劍", [(CharParameter.Atk, 5, 2), (CharParameter.Mat, 7, 6)])
                 ,(Weapon.Sword, "皇家騎士劍", [(CharParameter.Atk, 8, 5)])
@@ -39,79 +41,80 @@ namespace DataAcxess.Repository
                 ,(Armor.Robes, "棉布長袍", [(CharParameter.Def, 9, 5), (CharParameter.Mdf, 14, 8)])
                 ,(Armor.Robes, "百花袍", [(CharParameter.Def, 16, 4), (CharParameter.Mdf, 0, 2)])
                 ];
-
-        Dictionary<Weapon, Type> _wepDic = null!;
-        internal Dictionary<Weapon, Type> WepDic => _wepDic ?? InitWepDic();
-        Dictionary<Armor, Type> _armDic = null!;
-        internal Dictionary<Armor, Type> ArmDic => _armDic ?? InitAmrDic();
         #endregion
 
         #region methods
-        public BaseEquip GetRandomEquip(ShopType shopType)
+        public BaseEquip GetRandomEquip(ShopType shopType) => shopType switch
         {
-            BaseEquip item = shopType switch
+            ShopType.Weapon => CreateWeapon(weaponTypes[Utility.RandomInt(1, weaponTypes.Length)].ToEnum<Weapon>()),
+            ShopType.Armor => CreateArmor(armorType[Utility.RandomInt(1, armorType.Length)].ToEnum<Armor>()),
+            _ => Utility.RandomInt(2) switch
             {
-                ShopType.Weapon => CreateWeapon(WepDic.ElementAt(Utility.RandomInt(WepDic.Count))),
-                ShopType.Armor => CreateArmor(ArmDic.ElementAt(Utility.RandomInt(ArmDic.Count))),
-                _ => Utility.RandomInt(2) switch
-                {
-                    1 => CreateArmor(ArmDic.ElementAt(Utility.RandomInt(ArmDic.Count))),
-                    _ => CreateWeapon(WepDic.ElementAt(Utility.RandomInt(WepDic.Count))),
-                },
-            };
-            return item ?? throw new ArgumentNullException(nameof(shopType), "Undifind Equip type");
-        }
-        public BaseEquip GetWeapon(Weapon etype) => CreateWeapon(new KeyValuePair<Weapon, Type>(etype, WepDic[etype]));
-        public BaseEquip GetArmor(Armor etype) => CreateArmor(new KeyValuePair<Armor, Type>(etype, ArmDic[etype]));
+                1 => CreateArmor(armorType[Utility.RandomInt(1, armorType.Length)].ToEnum<Armor>()),
+                _ => CreateWeapon(weaponTypes[Utility.RandomInt(1, weaponTypes.Length)].ToEnum<Weapon>()),
+            },
+        };
+        public BaseEquip GetWeapon(Weapon etype) => CreateWeapon(etype);
+        public BaseEquip GetArmor(Armor etype) => CreateArmor(etype);
         #endregion
 
         #region <-- Factory -->
-        Dictionary<Weapon, Type> InitWepDic()
+        BaseEquip CreateWeapon(Weapon etype)
         {
-            _wepDic = [];
-            _wepDic.Add(Weapon.Sword, typeof(BaseSword));
-            _wepDic.Add(Weapon.Naginata, typeof(BaseNaginata));
-            _wepDic.Add(Weapon.Bow, typeof(BaseBow));
-            return _wepDic;
-        }
-        Dictionary<Armor, Type> InitAmrDic()
-        {
-            _armDic = [];
-            _armDic.Add(Armor.Hat, typeof(BaseHat));
-            _armDic.Add(Armor.Robes, typeof(BaseRobe));
-            _armDic.Add(Armor.Shoes, typeof(BaseShoes));
-            _armDic.Add(Armor.Gloves, typeof(BaseGloves));
-            return _armDic;
-        }
-        BaseEquip CreateWeapon(KeyValuePair<Weapon, Type> etype)
-        {
-            BaseEquip item = null!;
             short rank = this.GetRandomRank();
-            var query = WepList.Where(w => w.wep == etype.Key);
+            var query = WepList.Where(w => w.wep == etype);
+            if (!query.Any()) return new BaseEquip(rank);
             var (wep, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
-            switch (etype.Key)
+            BaseEquip item = etype switch
             {
-                case Weapon.Sword: item = new BaseSword(rank, defName); break;
-                case Weapon.Naginata: item = new BaseNaginata(rank, defName); break;
-                case Weapon.Bow: item = new BaseBow(rank, defName); break;
-            }
+                Weapon.Sword => new BaseSword(rank, defName),
+                Weapon.Katana => new BaseKatana(rank, defName),
+                Weapon.Rapier => new BaseRapier(rank, defName),
+                Weapon.Dagger => new BaseDagger(rank, defName),
+                Weapon.GreatSword => new BaseGreatSword(rank, defName),
+                Weapon.Naginata => new BaseNaginata(rank, defName),
+                Weapon.Dual_wield => new BaseDualwield(rank, defName),
+                Weapon.Axe => new BaseAxe(rank, defName),
+                Weapon.Hammer => new BaseHammer(rank, defName),
+                Weapon.Stick => new BaseStick(rank, defName),
+                Weapon.Mace => new BaseMace(rank, defName),
+                Weapon.Halberd => new BaseHalberd(rank, defName),
+                Weapon.Spear => new BaseSpear(rank, defName),
+                Weapon.Bow => new BaseBow(rank, defName),
+                Weapon.Crossbow => new BaseCrossbow(rank, defName),
+                Weapon.Gun => new BaseGun(rank, defName),
+                Weapon.Staff => new BaseStaff(rank, defName),
+                Weapon.Knuckles => new BaseKnuckles(rank, defName),
+                Weapon.Claw => new BaseClaw(rank, defName),
+                Weapon.Scythe => new BaseScythe(rank, defName),
+                Weapon.Whip => new BaseWhip(rank, defName),
+                _ => throw new ArgumentNullException(nameof(etype), "Undifind Equip type"),
+            };
             SetEquip(item, rank, values);
             item.Note = defName;
             return item;
         }
-        BaseEquip CreateArmor(KeyValuePair<Armor, Type> etype)
+        BaseEquip CreateArmor(Armor etype)
         {
-            BaseEquip item = null!;
-            var query = ArmList.Where(w => w.amr == etype.Key);
-            var (wep, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
             short rank = this.GetRandomRank();
-            switch (etype.Key)
+            var query = ArmList.Where(w => w.amr == etype);
+            if (!query.Any()) return new BaseEquip(rank);
+            var (wep, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
+            BaseEquip item = etype switch
             {
-                case Armor.Hat: item = new BaseHat(rank, defName); break;
-                case Armor.Robes: item = new BaseRobe(rank, defName); break;
-                case Armor.Shoes: item = new BaseShoes(rank, defName); break;
-                case Armor.Gloves: item = new BaseGloves(rank, defName); break;
-            }
+                Armor.Clothes => new BaseClothes(rank, defName),
+                Armor.Robes => new BaseRobe(rank, defName),
+                Armor.LightArmor => new BaseLightArmor(rank, defName),
+                Armor.HeavyArmor => new BaseHeavyArmor(rank, defName),
+                Armor.SmallSheld => new BaseSmallSheld(rank, defName),
+                Armor.BigSheld => new BaseBigSheld(rank, defName),
+                Armor.KitSheld => new BaseKitSheld(rank, defName),
+                Armor.Hat => new BaseHat(rank, defName),
+                Armor.Helmet => new BaseHelmet(rank, defName),
+                Armor.Gloves => new BaseGloves(rank, defName),
+                Armor.Shoes => new BaseShoes(rank, defName),
+                _ => throw new ArgumentNullException(nameof(etype), "Undifind Equip type"),
+            };
             SetEquip(item, rank, values);
             item.Note = defName;
             return item;

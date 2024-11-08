@@ -47,6 +47,5 @@ namespace Common
                 words.Append(ranBox[ran.Next(ranBox.Count)]);
             return words.ToString();
         }
-
     }
 }

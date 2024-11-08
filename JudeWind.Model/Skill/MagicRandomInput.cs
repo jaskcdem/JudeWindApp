@@ -1,4 +1,4 @@
-﻿using GreenUtility.Interface;
+﻿using GreenUtility.Magic;
 using JudeWind.Model.Enums;
 using static GreenUtility.RPGSetting;
 
@@ -45,7 +45,7 @@ namespace JudeWind.Model.Skill
     /// <summary> Magic Skill info </summary>
     public class MagicInfo
     {
-        public IMagicSkill Skill { get; set; } = null!;
+        public BaseSkill Skill { get; set; } = null!;
         public string TypeName { get => Skill.GetType().Name; }
     }
     /// <summary> Magic Skill </summary>

@@ -1,8 +1,6 @@
 ﻿using DataAcxess.Extension;
 using GreenUtility;
-using GreenUtility.Interface;
 using GreenUtility.Potion;
-using static GreenUtility.RPGSetting;
 
 namespace DataAcxess.Repository
 {
@@ -26,21 +24,22 @@ namespace DataAcxess.Repository
         #endregion
 
         #region methods
-        public IPotion GetFullRandomPotion()
+        public BasePotion GetFullRandomPotion()
         {
             PotionType _ptype = potionTypes[Utility.RandomInt(potionTypes.Length)].ToEnum<PotionType>();
             return GetRandomPotion(_ptype);
         }
-        public IPotion GetRandomPotion(PotionType ptype) => CreatePotion(ptype);
+        public BasePotion GetRandomPotion(PotionType ptype) => CreatePotion(ptype);
         #endregion
 
         #region <-- Factory -->
-        IPotion CreatePotion(PotionType ptype)
+        BasePotion CreatePotion(PotionType ptype)
         {
             short rank = this.GetRandomRank();
             var query = PotionList.Where(p => p.potion == ptype);
+            if (!query.Any()) return new BasePotion(rank);
             var (potion, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
-            IPotion item = ptype switch
+            BasePotion item = ptype switch
             {
                 PotionType.Red => new RedCow(rank, defName),
                 PotionType.Blue => new BlueBird(rank, defName),
@@ -52,7 +51,7 @@ namespace DataAcxess.Repository
             item.Note = defName;
             return item;
         }
-        static void SetPotion(IPotion item, short rank, (int basePoint, int growPoint, int basePercent, int growPercent)[] values)
+        static void SetPotion(BasePotion item, short rank, (int basePoint, int growPoint, int basePercent, int growPercent)[] values)
         {
             if (item == null) return;
             foreach (var (basePoint, growPoint, basePercent, growPercent) in values)

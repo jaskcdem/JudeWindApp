@@ -2,6 +2,7 @@
 using DataAcxess.Repository;
 using GreenUtility.Extension;
 using GreenUtility.Interface;
+using GreenUtility.Potion;
 using JudeWind.Model.Base;
 using JudeWind.Model.Items;
 using JudeWind.Service.Extension;
@@ -37,7 +38,7 @@ namespace JudeWind.Service.Items
 
         #region private method
         /// <summary>  </summary>
-        private static ClassicPotionOutput Boxing(int numbers, Func<IPotion> box)
+        private static ClassicPotionOutput Boxing(int numbers, Func<BasePotion> box)
         {
             ClassicPotionOutput _result = new();
             for (int i = 1; i <= numbers; i++)
@@ -45,14 +46,14 @@ namespace JudeWind.Service.Items
             return _result;
         }
         /// <summary>  </summary>
-        private void DecorateBoxing(ref DecoratorClassicPotionOutput result, DecoratorClassicPotionBoxInfo boxInfo, Func<IPotion> box)
+        private void DecorateBoxing(ref DecoratorClassicPotionOutput result, DecoratorClassicPotionBoxInfo boxInfo, Func<BasePotion> box)
         {
             DecoratorBuilder builder;
             for (int i = 1; i <= boxInfo.Numbers; i++)
             {
                 DecoratorClassicPotionInfo _potion = new() { Potion = box.Invoke() };
                 builder = CreateDecorateBuilder(_potion.Potion, boxInfo);
-                _potion.Potion = builder.BuildPotion();
+                _potion.Potion = (BasePotion)builder.BuildPotion();
                 _potion.UnhealthyStatuses = builder.GetUnhealthyStatuses();
                 _potion.Elements = builder.GetElements();
                 _potion.GreatElements = builder.GetGreatElements();

@@ -1,6 +1,5 @@
 ﻿using DataAcxess.Extension;
 using GreenUtility;
-using GreenUtility.Interface;
 using GreenUtility.Magic;
 using static GreenUtility.RPGSetting;
 
@@ -13,12 +12,12 @@ namespace DataAcxess.Repository
             greatElementType = Enum.GetNames(typeof(GreatElement));
 
         #region methods
-        public IMagicSkill GetFullRanderMagic()
+        public BaseSkill GetFullRanderMagic()
         {
             TargrtType _ttype = targetTypes[Utility.RandomInt(1, targetTypes.Length)].ToEnum<TargrtType>();
             return GetRanderMagic(_ttype);
         }
-        public IMagicSkill GetRanderMagic(TargrtType ttype)
+        public BaseSkill GetRanderMagic(TargrtType ttype)
         {
             int _eleLevel = Utility.RandomInt(2);
             string[] elementTypes = _eleLevel switch
@@ -33,25 +32,25 @@ namespace DataAcxess.Repository
             };
         }
 
-        public IMagicSkill GetElementMagic(Element mtype, TargrtType ttype) => CreateMagic(mtype, ttype);
-        public IMagicSkill GetElementMagic(TargrtType ttype)
+        public BaseSkill GetElementMagic(Element mtype, TargrtType ttype) => CreateMagic(mtype, ttype);
+        public BaseSkill GetElementMagic(TargrtType ttype)
         {
             Element mtype = elementType[Utility.RandomInt(1, elementType.Length)].ToEnum<Element>();
             return GetElementMagic(mtype, ttype);
         }
-        public IMagicSkill GetElementMagic(Element mtype)
+        public BaseSkill GetElementMagic(Element mtype)
         {
             TargrtType ttype = targetTypes[Utility.RandomInt(1, targetTypes.Length)].ToEnum<TargrtType>();
             return GetElementMagic(mtype, ttype);
         }
 
-        public IMagicSkill GetGreateElementMagic(GreatElement mtype, TargrtType ttype) => CreateGreateMagic(mtype, ttype);
-        public IMagicSkill GetGreateElementMagic(TargrtType ttype)
+        public BaseSkill GetGreateElementMagic(GreatElement mtype, TargrtType ttype) => CreateGreateMagic(mtype, ttype);
+        public BaseSkill GetGreateElementMagic(TargrtType ttype)
         {
             GreatElement mtype = greatElementType[Utility.RandomInt(1, greatElementType.Length)].ToEnum<GreatElement>();
             return GetGreateElementMagic(mtype, ttype);
         }
-        public IMagicSkill GetGreateElementMagic(GreatElement mtype)
+        public BaseSkill GetGreateElementMagic(GreatElement mtype)
         {
             TargrtType ttype = targetTypes[Utility.RandomInt(1, targetTypes.Length)].ToEnum<TargrtType>();
             return GetGreateElementMagic(mtype, ttype);
@@ -59,10 +58,10 @@ namespace DataAcxess.Repository
         #endregion
 
         #region <-- Factory -->
-        IMagicSkill CreateMagic(Element mtype, TargrtType ttype)
+        BaseSkill CreateMagic(Element mtype, TargrtType ttype)
         {
             short rank = this.GetRandomRank();
-            IMagicSkill skill = mtype switch
+            BaseSkill skill = mtype switch
             {
                 Element.Water => new BaseWaterMagic(rank),
                 Element.Fire => new BaseFireMagic(rank),
@@ -79,15 +78,15 @@ namespace DataAcxess.Repository
             skill.ResetName();
             return skill;
         }
-        IMagicSkill CreateGreateMagic(GreatElement mtype, TargrtType ttype)
+        BaseSkill CreateGreateMagic(GreatElement mtype, TargrtType ttype)
         {
             short rank = this.GetRandomRank();
-            IMagicSkill skill = mtype switch
+            BaseSkill skill = mtype switch
             {
                 GreatElement.Plant => new BasePlantMagic(rank),
-                GreatElement.Earth => new BasePlantMagic(rank),
-                GreatElement.Electric => new BasePlantMagic(rank),
-                GreatElement.Decay => new BasePlantMagic(rank),
+                GreatElement.Earth => new BaseEarthMagic(rank),
+                GreatElement.Electric => new BaseElectricMagic(rank),
+                GreatElement.Decay => new BaseDecayMagic(rank),
                 _ => throw new ArgumentNullException(nameof(mtype), "Undefind Great Element Type")
             };
             skill.TargrtType = ttype;

@@ -1,4 +1,5 @@
 ﻿using GreenUtility;
+using static GreenUtility.RPGSetting;
 
 namespace DataAcxess.Extension
 {

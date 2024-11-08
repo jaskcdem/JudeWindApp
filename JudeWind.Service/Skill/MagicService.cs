@@ -1,6 +1,6 @@
 ﻿using DataAcxess.ProjectContext;
 using DataAcxess.Repository;
-using GreenUtility.Interface;
+using GreenUtility.Magic;
 using JudeWind.Model.Enums;
 using JudeWind.Model.Skill;
 using static GreenUtility.RPGSetting;
@@ -36,7 +36,7 @@ namespace JudeWind.Service.Skill
         #endregion
 
         #region private method
-        static MagicOutput MagicBoxing(int number, Func<IMagicSkill> box)
+        static MagicOutput MagicBoxing(int number, Func<BaseSkill> box)
         {
             MagicOutput _result = new();
             for (int i = 1; i <= number; i++)
