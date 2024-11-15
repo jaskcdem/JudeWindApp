@@ -12,7 +12,7 @@ namespace DataAcxess.Repository
         const int purpleDivisor = 2, yellowDivisor = 4;
         readonly string[] potionTypes = Enum.GetNames(typeof(PotionType));
         readonly List<(PotionType potion, string defName, (int basePoint, int growPoint, int basePercent, int growPercent)[] values)> PotionList
-            = [(PotionType.Red, string.Empty, [(50, 2, 0, 0)]), (PotionType.Red, "回復藥", [(20, 20, 0, 0)])
+            = [(PotionType.Red, string.Empty, [(50, 2, 0, 0)]), (PotionType.Red, "回復劑", [(20, 20, 0, 0)])
                 , (PotionType.Red, "蓬萊赤草", [(0, 0, 10, 5)]), (PotionType.Red, "赭紅之泉", [(100, 25, 20, 0)])
                 , (PotionType.Blue, string.Empty, [(25, 1, 0, 0)]), (PotionType.Blue, "魔法藥水", [(10, 10, 0, 0)])
                 , (PotionType.Blue, "蓬萊青草", [(0, 0, 10, 5)]), (PotionType.Blue, "海藍之泉", [(50, 25, 20, 0)])

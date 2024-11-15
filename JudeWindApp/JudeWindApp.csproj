@@ -13,6 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="KaiU.ttf">
+      <CustomToolNamespace>JudeWindApp</CustomToolNamespace>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\JudeWind.Model\JudeWind.Model.csproj" />
     <ProjectReference Include="..\JudeWind.Service\JudeWind.Service.csproj" />

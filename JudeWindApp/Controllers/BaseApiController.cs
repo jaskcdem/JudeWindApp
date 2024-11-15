@@ -2,6 +2,7 @@
 using JudeWindApp.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
+using NPOI.OpenXml4Net.OPC.Internal;
 
 namespace JudeWindApp.Controllers
 {
@@ -31,9 +32,13 @@ namespace JudeWindApp.Controllers
         protected IActionResult DownloadPhysicalFile(string physicalPath) => PhysicalFile(physicalPath, MimeTypes.GetMimeType(physicalPath), Path.GetFileName(physicalPath));
 
         /// <summary>  </summary>
-        protected IActionResult DownloadFileStream(Stream fileStream, string mimeType, string fileName) => new FileStreamResult(fileStream, mimeType) { FileDownloadName = fileName };
+        protected IActionResult DownloadFileStream(Stream fileStream, string fileName) => File(fileStream, MimeTypes.GetMimeType(fileName), fileName);
         /// <summary>  </summary>
-        protected IActionResult DownloadFileContent(byte[] fileBytes, string mimeType, string fileName) => new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName };
+        protected IActionResult DownloadFileStream(Stream fileStream, string mimeType, string fileName) => File(fileStream, mimeType, fileName);
+        /// <summary>  </summary>
+        protected IActionResult DownloadFileContent(byte[] fileBytes, string fileName) => File(fileBytes, MimeTypes.GetMimeType(fileName), fileName);
+        /// <summary>  </summary>
+        protected IActionResult DownloadFileContent(byte[] fileBytes, string mimeType, string fileName) => File(fileBytes, mimeType, fileName);
 
         #region Private Methods
         /// <summary> 取回使用者帳號 </summary>

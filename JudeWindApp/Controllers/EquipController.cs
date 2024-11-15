@@ -1,6 +1,9 @@
-﻿using JudeWind.Model.Equips;
+﻿using GreenUtility;
+using GreenUtility.Equip;
+using JudeWind.Model.Equips;
 using JudeWind.Service.Equips;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace JudeWindApp.Controllers
 {
@@ -26,5 +29,39 @@ namespace JudeWindApp.Controllers
         /// <summary> 彩蛋防具箱 </summary>
         [HttpPost]
         public DecoratorEquipOutput RandomDecArmorBox(DecoratorEquipInput input) => _equipService.RandomDecArmorBox(input);
+
+        /// <summary> 裝備套組 </summary>
+        [HttpPost]
+        public List<BaseEquip> SuitEquipBag(SuitEquipInput input) => _equipService.SuitEquipBag(input);
+        /// <summary> 匯出裝備套組 </summary>
+        /// <remarks><list type="table">fileType:
+        /// <item><term>1</term><description> xlsx </description></item>
+        /// <item><term>2</term><description> ods </description></item>
+        /// <item><term>3</term><description> pdf </description></item>
+        /// </list></remarks>
+        [HttpPost]
+        public IActionResult ExportSuitEquip(SuitEquipInput input, int fileType) => fileType switch
+        {
+            1 => DownloadFileContent(_equipService.ExportSuitExcel(input), $"{input.SuitType.GetEnumDescription()}套組-{DateTime.Now:yyyyMMddHHmm}.xlsx"),
+            2 => DownloadFileStream(_equipService.ExportSuitOds(input), $"{input.SuitType.GetEnumDescription()}套組-{DateTime.Now:yyyyMMddHHmm}.ods"),
+            3 => DownloadFileContent(_equipService.ExportSuitPdf(input), $"{input.SuitType.GetEnumDescription()}套組-{DateTime.Now:yyyyMMddHHmm}.pdf"),
+            _ => StatusCode((int)HttpStatusCode.BadRequest),
+        };
+        /// <summary> 匯出裝備套組 </summary>
+        /// <remarks><list type="table">fileType:
+        /// <item><term>1</term><description> xlsx </description></item>
+        /// <item><term>2</term><description> ods </description></item>
+        /// <item><term>3</term><description> pdf </description></item>
+        /// <item><term>4</term><description> ods spirt </description></item>
+        /// </list></remarks>
+        [HttpGet]
+        public IActionResult ExportAllSuitEquip(int fileType) => fileType switch
+        {
+            1 => DownloadFileContent(_equipService.ExportAllSuitExcel(), $"究極套組-{DateTime.Now:yyyyMMddHHmm}.xlsx"),
+            2 => DownloadFileStream(_equipService.ExportAllSuitOds(), $"究極套組-{DateTime.Now:yyyyMMddHHmm}.ods"),
+            3 => DownloadFileContent(_equipService.ExportAllSuitPdf(), $"究極套組-{DateTime.Now:yyyyMMddHHmm}.pdf"),
+            4 => DownloadFileStream(_equipService.ExportAllSuitOds(true), $"究極套組-{DateTime.Now:yyyyMMddHHmm}.ods"),
+            _ => StatusCode((int)HttpStatusCode.BadRequest),
+        };
     }
 }

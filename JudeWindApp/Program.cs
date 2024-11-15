@@ -1,10 +1,13 @@
 using JudeWindApp.Attributes;
 using JudeWindApp.Services;
+using JudeWindApp.Util;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
+using PdfSharp.Fonts;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+GlobalFontSettings.FontResolver = KaiuResolverHelper.Instance;
 
 builder.Services.AddControllers().AddJsonOptions(option =>
 {
