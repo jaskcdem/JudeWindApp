@@ -1,8 +1,11 @@
-﻿using DataAcxess.Extension;
+﻿using DataAcxess.DataEnums;
+using DataAcxess.Extension;
+using DataAcxess.LogContext;
 using GreenUtility;
 using GreenUtility.Equip;
 using System.ComponentModel;
 using static GreenUtility.RPGSetting;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DataAcxess.Repository
 {
@@ -91,31 +94,11 @@ namespace DataAcxess.Repository
             [Description("魅魔")]
             Succubus,
         }
-        /// <summary> 稀有度 </summary>
-        public enum ItemLevel
-        {
-            /// <summary> 一般 </summary>
-            N,
-            /// <summary> 稀有 </summary>
-            R,
-            /// <summary> 極稀有 </summary>
-            SR,
-            /// <summary> 史詩 </summary>
-            ER,
-            /// <summary> 傳說 </summary>
-            LR,
-            /// <summary> 幻想 </summary>
-            UR,
-        }
         #endregion
 
         #region private members
         readonly string[] weaponTypes = Enum.GetNames(typeof(Weapon)),
             armorType = Enum.GetNames(typeof(Armor));
-        readonly Dictionary<ItemLevel, int> RarePoint = new()
-        {
-            { ItemLevel.N, 5 }, { ItemLevel.R, 7 }, { ItemLevel.SR, 9 }, { ItemLevel.ER, 11 }, { ItemLevel.LR, 13 }, { ItemLevel.UR, int.MaxValue }
-        };
         readonly List<(Weapon wep, string defName, (CharParameter para, int basePoint, int growPoint)[] values)> WepList
            = [(Weapon.Sword, "N-衛兵之劍", [(CharParameter.Atk, 4, 1), (CharParameter.Def, 1, 1)])
                 ,(Weapon.Sword, "R-女戰士西洋劍", [(CharParameter.Atk, 4, 1), (CharParameter.Mat, 2, 1), (CharParameter.Agi, 1, 1)])
@@ -409,12 +392,12 @@ namespace DataAcxess.Repository
         #region methods
         public BaseEquip GetRandomEquip(ShopType shopType) => shopType switch
         {
-            ShopType.Weapon => CreateWeapon(weaponTypes[Utility.RandomInt(1, weaponTypes.Length)].ToEnum<Weapon>()),
-            ShopType.Armor => CreateArmor(armorType[Utility.RandomInt(1, armorType.Length)].ToEnum<Armor>()),
+            ShopType.Weapon => CreateWeapon(weaponTypes[Utility.RandomInt(weaponTypes.Length)].ToEnum<Weapon>()),
+            ShopType.Armor => CreateArmor(armorType[Utility.RandomInt(armorType.Length)].ToEnum<Armor>()),
             _ => Utility.RandomInt(2) switch
             {
-                1 => CreateArmor(armorType[Utility.RandomInt(1, armorType.Length)].ToEnum<Armor>()),
-                _ => CreateWeapon(weaponTypes[Utility.RandomInt(1, weaponTypes.Length)].ToEnum<Weapon>()),
+                1 => CreateArmor(armorType[Utility.RandomInt(armorType.Length)].ToEnum<Armor>()),
+                _ => CreateWeapon(weaponTypes[Utility.RandomInt(weaponTypes.Length)].ToEnum<Weapon>()),
             },
         };
         public BaseEquip GetWeapon(Weapon etype) => CreateWeapon(etype);
@@ -438,6 +421,134 @@ namespace DataAcxess.Repository
                 equips.Add(total);
             }
             return equips;
+        }
+        public List<SuitEquipLog> CountSuitPoint(SuitEquipType sType)
+        {
+            List<SuitEquipLog> suits = [];
+            if (sType == SuitEquipType.None) return suits;
+            var (type, names) = SuitEquipList.FirstOrDefault(s => s.type == sType);
+            short rank = this.GetRandomRank();
+            #region query list
+            var wepQuery = WepList.Where(w => w.defName == names[0]);
+            if (wepQuery.Any())
+            {
+                var (wep, defName, values) = wepQuery.ElementAt(Utility.RandomInt(wepQuery.Count()));
+                var defArr = defName.Split('-'); string slev;
+                if (defArr.Length > 1)
+                {
+                    slev = defArr[0];
+                    defName = defArr[1];
+                }
+                else
+                    slev = ItemLevel.UR.ToString();
+                BaseEquip item = InitWeapon(wep, rank, defName);
+                SetEquip(item, rank, values);
+                item.Note = defName;
+
+                SuitEquipLog element = new(item)
+                {
+                    Level = slev.ToEnum<ItemLevel>(),
+                    TotalPoint = CountTotalPoint(values.Select(z => (z.basePoint, z.growPoint)).ToArray())
+                };
+                suits.Add(element);
+            }
+            for (int i = 1; i < names.Length; i++)
+            {
+                var armQuery = ArmList.Where(a => a.defName == names[i]);
+                if (armQuery.Any())
+                {
+                    var (arm, defName, values) = armQuery.ElementAt(Utility.RandomInt(armQuery.Count()));
+                    var defArr = defName.Split('-'); string slev;
+                    if (defArr.Length > 1)
+                    {
+                        slev = defArr[0];
+                        defName = defArr[1];
+                    }
+                    else
+                        slev = ItemLevel.UR.ToString();
+                    BaseEquip item = InitArmor(arm, rank, defName);
+                    SetEquip(item, rank, values);
+                    item.Note = defName;
+
+                    SuitEquipLog element = new(item)
+                    {
+                        Level = slev.ToEnum<ItemLevel>(),
+                        TotalPoint = CountTotalPoint(values.Select(z => (z.basePoint, z.growPoint)).ToArray())
+                    };
+                    suits.Add(element);
+                }
+            }
+            #endregion
+            if (suits.Count != 0)
+            {
+                SuitEquipLog total = new([.. suits]) { Name = $"{sType.GetEnumDescription()}總和" };
+                suits.Add(total);
+            }
+            return suits;
+        }
+
+        public BaseEquip GetWeaponByLevel(ItemLevel level)
+        {
+            short rank = this.GetRandomRank();
+            var query = WepList.Where(w => w.defName.StartsWith(level.ToString()));
+            if (!query.Any()) return new BaseEquip(rank);
+            var (wep, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
+            defName = GetNameWithoutRank(defName);
+            BaseEquip item = InitWeapon(wep, rank, defName);
+            SetEquip(item, rank, values);
+            item.Note = defName;
+            return item;
+        }
+        public BaseEquip GetArmorByLevel(ItemLevel level)
+        {
+            short rank = this.GetRandomRank();
+            var query = ArmList.Where(w => w.defName.StartsWith(level.ToString()));
+            if (!query.Any()) return new BaseEquip(rank);
+            var (arm, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
+            defName = GetNameWithoutRank(defName);
+            BaseEquip item = InitArmor(arm, rank, defName);
+            SetEquip(item, rank, values);
+            item.Note = defName;
+            return item;
+        }
+
+        public BaseEquip GetSpecifyWeapon(Weapon? etype = null, ItemLevel? level = null, SuitEquipType? sType = null)
+        {
+            short rank = this.GetRandomRank();
+            if (sType == SuitEquipType.None) return new BaseEquip(rank);
+
+            var query = WepList.AsEnumerable();
+            if (etype.HasValue) query = query.Where(w => w.wep == etype);
+            if (level.HasValue) query = query.Where(w => w.defName.StartsWith(level.Value.ToString()));
+            if (sType.HasValue && SuitEquipList.Any(s => s.type == sType))
+                query = query.Where(w => w.defName == SuitEquipList.First(s => s.type == sType).names[0]);
+            if (!query.Any()) return new BaseEquip(rank);
+
+            var (wep, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
+            defName = GetNameWithoutRank(defName);
+            BaseEquip item = InitWeapon(wep, rank, defName);
+            SetEquip(item, rank, values);
+            item.Note = defName;
+            return item;
+        }
+        public BaseEquip GetSpecifyArmor(Armor? etype = null, ItemLevel? level = null, SuitEquipType? sType = null)
+        {
+            short rank = this.GetRandomRank();
+            if (sType == SuitEquipType.None) return new BaseEquip(rank);
+
+            var query = ArmList.AsEnumerable();
+            if (etype.HasValue) query = query.Where(w => w.arm == etype);
+            if (level.HasValue) query = query.Where(w => w.defName.StartsWith(level.Value.ToString()));
+            if (sType.HasValue && SuitEquipList.Any(s => s.type == sType))
+                query = query.Where(w => SuitEquipList.First(s => s.type == sType).names.Contains(w.defName));
+            if (!query.Any()) return new BaseEquip(rank);
+
+            var (arm, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
+            defName = GetNameWithoutRank(defName);
+            BaseEquip item = InitArmor(arm, rank, defName);
+            SetEquip(item, rank, values);
+            item.Note = defName;
+            return item;
         }
         #endregion
 
@@ -564,6 +675,6 @@ namespace DataAcxess.Repository
         private static string GetNameWithoutRank(string name) => name.Split('-').Length > 1 ? name.Split('-')[1] : name;
         #endregion
 
-        private int CountTotalPoint((int basePoint, int growPoint)[] values) => values.Sum(x => x.growPoint != 0 ? x.basePoint / x.growPoint : 0);
+        private static int CountTotalPoint((int basePoint, int growPoint)[] values) => values.Sum(x => x.growPoint != 0 ? x.basePoint / x.growPoint : 0);
     }
 }

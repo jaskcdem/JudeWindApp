@@ -1,4 +1,5 @@
 ﻿using Common.Extension;
+using DataAcxess.LogContext;
 using DataAcxess.ProjectContext;
 using DataAcxess.Repository;
 using GreenUtility;
@@ -160,6 +161,8 @@ namespace JudeWind.Service.Equips
             return ExportHelper.ExportPdf(buildInfo);
         }
         #endregion
+
+
         #endregion
 
         #region private method
@@ -221,6 +224,25 @@ namespace JudeWind.Service.Equips
                     {"售價", j.Price},
                     {"備註", j.Note ?? string.Empty},
                     {"類別", j.GetType() }
+                }),
+         ];
+        private static List<Dictionary<string, object>> GetSimpleExcel(List<SuitEquipLog> data)
+         => [
+             ..data.Select(j => new Dictionary<string, object>
+                {
+                    {"名稱", j.Name},
+                    {"品級", j.Rank},
+                    {"最大血量", j.Mhp},
+                    {"最大魔力", j.Mmp},
+                    {"攻擊力", j.Atk},
+                    {"防禦力", j.Def},
+                    {"魔法攻擊", j.Mat},
+                    {"魔法防禦", j.Mdf},
+                    {"敏捷", j.Agi},
+                    {"稀有度", j.Level},
+                    {"總點數", j.TotalPoint},
+                    {"比較值", j.Compared},
+                    {"備註", j.Note ?? string.Empty},
                 }),
          ];
         private static List<(int index, string name, double width)> GetOdsColumnsSetting()
