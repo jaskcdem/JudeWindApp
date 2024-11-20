@@ -2,7 +2,6 @@
 using GreenUtility;
 using GreenUtility.Equip;
 using GreenUtility.Interface;
-using static DataAcxess.Repository.EquipRepository;
 
 namespace DataAcxess.LogContext
 {

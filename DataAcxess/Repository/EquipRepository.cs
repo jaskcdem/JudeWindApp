@@ -387,6 +387,8 @@ namespace DataAcxess.Repository
             (SuitEquipType.Alice, ["ER-愛麗絲之鞭", "ER-愛麗絲禮服", "ER-愛麗絲長襪", "ER-愛麗絲緞帶", "ER-愛麗絲長手套", "ER-愛麗絲皮鞋"]),
             (SuitEquipType.Succubus, ["LR-魅魔之尾", "LR-魅魔服", "LR-魅魔之翼", "LR-魅魔之角", "LR-魅魔之戒", "LR-魅魔之靴"]),
             ];
+
+        readonly BaseEquip EmptyItem = new(0);
         #endregion
 
         #region methods
@@ -487,42 +489,17 @@ namespace DataAcxess.Repository
             return suits;
         }
 
-        public BaseEquip GetWeaponByLevel(ItemLevel level)
-        {
-            short rank = this.GetRandomRank();
-            var query = WepList.Where(w => w.defName.StartsWith(level.ToString()));
-            if (!query.Any()) return new BaseEquip(rank);
-            var (wep, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
-            defName = GetNameWithoutRank(defName);
-            BaseEquip item = InitWeapon(wep, rank, defName);
-            SetEquip(item, rank, values);
-            item.Note = defName;
-            return item;
-        }
-        public BaseEquip GetArmorByLevel(ItemLevel level)
-        {
-            short rank = this.GetRandomRank();
-            var query = ArmList.Where(w => w.defName.StartsWith(level.ToString()));
-            if (!query.Any()) return new BaseEquip(rank);
-            var (arm, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
-            defName = GetNameWithoutRank(defName);
-            BaseEquip item = InitArmor(arm, rank, defName);
-            SetEquip(item, rank, values);
-            item.Note = defName;
-            return item;
-        }
-
         public BaseEquip GetSpecifyWeapon(Weapon? etype = null, ItemLevel? level = null, SuitEquipType? sType = null)
         {
             short rank = this.GetRandomRank();
-            if (sType == SuitEquipType.None) return new BaseEquip(rank);
+            if (sType == SuitEquipType.None) return EmptyItem;
 
             var query = WepList.AsEnumerable();
             if (etype.HasValue) query = query.Where(w => w.wep == etype);
             if (level.HasValue) query = query.Where(w => w.defName.StartsWith(level.Value.ToString()));
             if (sType.HasValue && SuitEquipList.Any(s => s.type == sType))
                 query = query.Where(w => w.defName == SuitEquipList.First(s => s.type == sType).names[0]);
-            if (!query.Any()) return new BaseEquip(rank);
+            if (!query.Any()) return EmptyItem;
 
             var (wep, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
             defName = GetNameWithoutRank(defName);
@@ -534,14 +511,14 @@ namespace DataAcxess.Repository
         public BaseEquip GetSpecifyArmor(Armor? etype = null, ItemLevel? level = null, SuitEquipType? sType = null)
         {
             short rank = this.GetRandomRank();
-            if (sType == SuitEquipType.None) return new BaseEquip(rank);
+            if (sType == SuitEquipType.None) return EmptyItem;
 
             var query = ArmList.AsEnumerable();
             if (etype.HasValue) query = query.Where(w => w.arm == etype);
             if (level.HasValue) query = query.Where(w => w.defName.StartsWith(level.Value.ToString()));
             if (sType.HasValue && SuitEquipList.Any(s => s.type == sType))
                 query = query.Where(w => SuitEquipList.First(s => s.type == sType).names.Contains(w.defName));
-            if (!query.Any()) return new BaseEquip(rank);
+            if (!query.Any()) return EmptyItem;
 
             var (arm, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
             defName = GetNameWithoutRank(defName);
@@ -558,7 +535,7 @@ namespace DataAcxess.Repository
         {
             short rank = this.GetRandomRank();
             var query = WepList.Where(w => w.wep == etype);
-            if (!query.Any()) return new BaseEquip(rank);
+            if (!query.Any()) return EmptyItem;
             var (wep, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
             defName = GetNameWithoutRank(defName);
             BaseEquip item = InitWeapon(wep, rank, defName);
@@ -570,7 +547,7 @@ namespace DataAcxess.Repository
         {
             short rank = this.GetRandomRank();
             var query = ArmList.Where(w => w.arm == etype);
-            if (!query.Any()) return new BaseEquip(rank);
+            if (!query.Any()) return EmptyItem;
             var (arm, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
             defName = GetNameWithoutRank(defName);
             BaseEquip item = InitArmor(arm, rank, defName);

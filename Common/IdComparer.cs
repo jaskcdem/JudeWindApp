@@ -20,4 +20,23 @@ namespace Common
             return -_compare;
         }
     }
+
+    /// <summary> CaseId Comparer </summary>
+    public class CaseIdComparer : IComparer<string?>
+    {
+        /// <summary> CaseId Compare </summary>
+        /// <remarks>null is smallest, than sort number desc </remarks>
+        public int Compare([AllowNull] string? x, [AllowNull] string? y)
+        {
+            if (x == null && y == null) return 0;
+            else if (x == null && y != null) return -1;
+            else if (x != null && y == null) return 1;
+
+            bool isNumberX = int.TryParse(x, out int iX), isNumberY = int.TryParse(y, out int iY);
+            if (isNumberX && isNumberY) return iX.CompareTo(iY);
+            else if (!isNumberX && isNumberY) return 1;
+            else if (isNumberX && !isNumberY) return -1;
+            else return x!.CompareTo(y);
+        }
+    }
 }

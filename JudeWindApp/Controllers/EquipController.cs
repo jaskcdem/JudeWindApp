@@ -13,22 +13,31 @@ namespace JudeWindApp.Controllers
         readonly EquipService _equipService = equipService;
         /// <summary> 裝備箱 </summary>
         [HttpPost]
-        public EquipOutput RandomEquipBox(EquipRandomInput input) => _equipService.RandomEquipBox(input);
+        public List<EquipOutput> RandomEquipBox(EquipRandomInput input) => _equipService.RandomEquipBox(input);
         /// <summary> 武器箱 </summary>
         [HttpPost]
-        public EquipOutput RandomWeaponBox(EquipRandomInput input) => _equipService.RandomWeaponBox(input);
+        public List<EquipOutput> RandomWeaponBox(EquipRandomInput input) => _equipService.RandomWeaponBox(input);
         /// <summary> 防具箱 </summary>
         [HttpPost]
-        public EquipOutput RandomArmorBox(EquipRandomInput input) => _equipService.RandomArmorBox(input);
+        public List<EquipOutput> RandomArmorBox(EquipRandomInput input) => _equipService.RandomArmorBox(input);
         /// <summary> 彩蛋裝備箱 </summary>
         [HttpPost]
-        public DecoratorEquipOutput RandomDecEquipBox(DecoratorEquipInput input) => _equipService.RandomDecEquipBox(input);
+        public List<DecoratorEquipOutput> RandomDecEquipBox(DecoratorEquipInput input) => _equipService.RandomDecEquipBox(input);
         /// <summary> 彩蛋武器箱 </summary>
+        /// <remarks>not use: Weapo, Armor</remarks>
         [HttpPost]
-        public DecoratorEquipOutput RandomDecWeaponBox(DecoratorEquipInput input) => _equipService.RandomDecWeaponBox(input);
+        public List<DecoratorEquipOutput> RandomDecWeaponBox(DecoratorEquipInput input) => _equipService.RandomDecWeaponBox(input);
         /// <summary> 彩蛋防具箱 </summary>
+        /// <remarks>not use: Weapon, Armor</remarks>
         [HttpPost]
-        public DecoratorEquipOutput RandomDecArmorBox(DecoratorEquipInput input) => _equipService.RandomDecArmorBox(input);
+        public List<DecoratorEquipOutput> RandomDecArmorBox(DecoratorEquipInput input) => _equipService.RandomDecArmorBox(input);
+
+        /// <summary> 抽獎箱 </summary>
+        [HttpPost]
+        public List<StoreEquipBoxOutput> StoreEquipBoxes(StoreEquipBoxInput input) => _equipService.StoreEquipBoxes(input);
+        /// <summary> 彩蛋抽獎箱 </summary>
+        [HttpPost]
+        public List<StoreDecEquipBoxOutput> StoreDecEquipBoxes(StoreDecEquipBoxInput input) => _equipService.StoreDecEquipBoxes(input);
 
         /// <summary> 裝備套組 </summary>
         [HttpPost]
@@ -63,5 +72,8 @@ namespace JudeWindApp.Controllers
             4 => DownloadFileStream(_equipService.ExportAllSuitOds(true), $"究極套組-{DateTime.Now:yyyyMMddHHmm}.ods"),
             _ => StatusCode((int)HttpStatusCode.BadRequest),
         };
+        /// <summary> 匯出裝備套組Log </summary>
+        [HttpGet]
+        public IActionResult ExportSuitLogExcel() => DownloadFileContent(_equipService.ExportSuitLogExcel(), $"套組Log-{DateTime.Now:yyyyMMddHHmm}.xlsx");
     }
 }

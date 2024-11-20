@@ -1,4 +1,6 @@
-﻿using Common.Extension;
+﻿using Common;
+using Common.Extension;
+using DataAcxess.DataEnums;
 using DataAcxess.LogContext;
 using DataAcxess.ProjectContext;
 using DataAcxess.Repository;
@@ -23,20 +25,20 @@ namespace JudeWind.Service.Equips
         #region methods
         #region <-- Box -->
         /// <summary> 裝備箱 </summary>
-        public EquipOutput RandomEquipBox(EquipRandomInput input) => input.Weapon.HasValue && !input.Armor.HasValue
+        public List<EquipOutput> RandomEquipBox(EquipRandomInput input) => input.Weapon.HasValue && !input.Armor.HasValue
                 ? Boxing(input.Numbers, () => _equipRepository.GetWeapon(input.Weapon.Value))
                 : !input.Weapon.HasValue && input.Armor.HasValue
                 ? Boxing(input.Numbers, () => _equipRepository.GetArmor(input.Armor.Value))
                 : Boxing(input.Numbers, () => _equipRepository.GetRandomEquip(ShopType.Equip));
         /// <summary> 武器箱 </summary>
-        public EquipOutput RandomWeaponBox(EquipRandomInput input) => Boxing(input.Numbers, () => _equipRepository.GetRandomEquip(ShopType.Weapon));
+        public List<EquipOutput> RandomWeaponBox(EquipRandomInput input) => Boxing(input.Numbers, () => _equipRepository.GetRandomEquip(ShopType.Weapon));
         /// <summary> 防具箱 </summary>
-        public EquipOutput RandomArmorBox(EquipRandomInput input) => Boxing(input.Numbers, () => _equipRepository.GetRandomEquip(ShopType.Armor));
+        public List<EquipOutput> RandomArmorBox(EquipRandomInput input) => Boxing(input.Numbers, () => _equipRepository.GetRandomEquip(ShopType.Armor));
 
         /// <summary> 彩蛋裝備箱 </summary>
-        public DecoratorEquipOutput RandomDecEquipBox(DecoratorEquipInput input)
+        public List<DecoratorEquipOutput> RandomDecEquipBox(DecoratorEquipInput input)
         {
-            DecoratorEquipOutput _result = new();
+            List<DecoratorEquipOutput> _result = [];
             LimitDecorateCount(input);
             foreach (var _boxInfo in input.DecorateBox)
             {
@@ -47,28 +49,31 @@ namespace JudeWind.Service.Equips
                 else
                     DecorateBoxing(ref _result, _boxInfo, () => _equipRepository.GetRandomEquip(ShopType.Equip));
             }
+            _result.RemoveAll(CanRemove);
             return _result;
         }
         /// <summary> 彩蛋武器箱 </summary>
-        public DecoratorEquipOutput RandomDecWeaponBox(DecoratorEquipInput input)
+        public List<DecoratorEquipOutput> RandomDecWeaponBox(DecoratorEquipInput input)
         {
-            DecoratorEquipOutput _result = new();
+            List<DecoratorEquipOutput> _result = [];
             LimitDecorateCount(input);
             foreach (var _boxInfo in input.DecorateBox)
             {
                 DecorateBoxing(ref _result, _boxInfo, () => _equipRepository.GetRandomEquip(ShopType.Weapon));
             }
+            _result.RemoveAll(CanRemove);
             return _result;
         }
         /// <summary> 彩蛋防具箱 </summary>
-        public DecoratorEquipOutput RandomDecArmorBox(DecoratorEquipInput input)
+        public List<DecoratorEquipOutput> RandomDecArmorBox(DecoratorEquipInput input)
         {
-            DecoratorEquipOutput _result = new();
+            List<DecoratorEquipOutput> _result = [];
             LimitDecorateCount(input);
             foreach (var _boxInfo in input.DecorateBox)
             {
                 DecorateBoxing(ref _result, _boxInfo, () => _equipRepository.GetRandomEquip(ShopType.Armor));
             }
+            _result.RemoveAll(CanRemove);
             return _result;
         }
         #endregion
@@ -160,35 +165,115 @@ namespace JudeWind.Service.Equips
             };
             return ExportHelper.ExportPdf(buildInfo);
         }
+
+        public byte[] ExportSuitLogExcel()
+        {
+            List<SuitEquipLog> _suits = [];
+            foreach (var name in suitTypes) _suits.AddRange(_equipRepository.CountSuitPoint(name.ToEnum<EquipRepository.SuitEquipType>()));
+            return ExportHelper.ExportExcel(GetSimpleExcel(_suits));
+        }
         #endregion
 
+        #region <-- StoreBox -->
+        public List<StoreEquipBoxOutput> StoreEquipBoxes(StoreEquipBoxInput input)
+        {
+            ArgumentNullException.ThrowIfNull(nameof(input.BoxInfos));
+            if (input.BoxInfos.Count == 0) return [];
+            Dictionary<ItemLevel, double> presentStage = BuildRateDic(input.BoxInfos);
 
+            #region local func
+            ItemLevel RandomLevel()
+            {
+                var dRes = GeneralTool.StageRandom(presentStage.Values.ToArray());
+                var elemnet = presentStage.FirstOrDefault(x => x.Value == dRes);
+                return elemnet.Key;
+            }
+            BaseEquip SpecifyWeapon(ItemLevel lev) => _equipRepository.GetSpecifyWeapon(input.Weapon, lev, input.SuitType);
+            BaseEquip SpecifyArmor(ItemLevel lev) => _equipRepository.GetSpecifyArmor(input.Armor, lev, input.SuitType);
+            #endregion
+            if (input.IsWeaponBox)
+                return StoreBoxing(input.Numbers, RandomLevel, SpecifyWeapon);
+            if (input.IsArmorBox)
+                return StoreBoxing(input.Numbers, RandomLevel, SpecifyArmor);
+            return Utility.RandomInt(2) switch
+            {
+                1 => StoreBoxing(input.Numbers, RandomLevel, SpecifyWeapon),
+                _ => StoreBoxing(input.Numbers, RandomLevel, SpecifyArmor)
+            };
+        }
+        public List<StoreDecEquipBoxOutput> StoreDecEquipBoxes(StoreDecEquipBoxInput input)
+        {
+            ArgumentNullException.ThrowIfNull(nameof(input.BoxInfos));
+            if (input.BoxInfos.Count == 0) return [];
+            Dictionary<ItemLevel, double> presentStage = BuildRateDic(input.BoxInfos);
+
+            #region local func
+            ItemLevel RandomLevel()
+            {
+                var dRes = GeneralTool.StageRandom(presentStage.Values.ToArray());
+                var elemnet = presentStage.FirstOrDefault(x => x.Value == dRes);
+                return elemnet.Key;
+            }
+            BaseEquip SpecifyWeapon(ItemLevel lev) => _equipRepository.GetSpecifyWeapon(input.Weapon, lev, input.SuitType);
+            BaseEquip SpecifyArmor(ItemLevel lev) => _equipRepository.GetSpecifyArmor(input.Armor, lev, input.SuitType);
+            #endregion
+            List<StoreDecEquipBoxOutput> _result = [];
+            LimitDecorateCount(input);
+            foreach (var _boxInfo in input.DecorateBox)
+            {
+                if (input.IsWeaponBox)
+                {
+                    StoreDecorateBoxing(ref _result, _boxInfo, RandomLevel, SpecifyWeapon);
+                    continue;
+                }
+                if (input.IsArmorBox)
+                {
+                    StoreDecorateBoxing(ref _result, _boxInfo, RandomLevel, SpecifyArmor);
+                    continue;
+                }
+
+                switch (Utility.RandomInt(2))
+                {
+                    case 1: StoreDecorateBoxing(ref _result, _boxInfo, RandomLevel, SpecifyWeapon); continue;
+                    default: StoreDecorateBoxing(ref _result, _boxInfo, RandomLevel, SpecifyArmor); continue;
+                }
+            }
+            _result.RemoveAll(e => e.TypeName == nameof(BaseEquip) && e.Equip.Rank <= 0);
+            return _result;
+        }
+        #endregion
         #endregion
 
         #region private method
         #region <-- Boxing -->
         /// <summary>  </summary>
-        private static EquipOutput Boxing(int numbers, Func<BaseEquip> box)
+        /// <param name="numbers">total pickup numbers</param>
+        /// <param name="box">create or find equip func</param>
+        private static List<EquipOutput> Boxing(int numbers, Func<BaseEquip> box)
         {
-            EquipOutput _result = new();
+            List<EquipOutput> _result = [];
             for (int i = 1; i <= numbers; i++)
-                _result.Equips.Add(new() { Equip = box.Invoke() });
+                _result.Add(new() { Equip = box.Invoke() });
+            _result.RemoveAll(e => e.TypeName == nameof(BaseEquip) && e.Equip.Rank <= 0);
             return _result;
         }
         /// <summary>  </summary>
-        private void DecorateBoxing(ref DecoratorEquipOutput result, DecoratorEquipBoxInfo boxInfo, Func<BaseEquip> box)
+        /// <param name="result">out put object</param>
+        /// <param name="boxInfo">decorate info</param>
+        /// <param name="box">create or find equip func</param>
+        private void DecorateBoxing(ref List<DecoratorEquipOutput> result, DecoratorEquipBoxInfo boxInfo, Func<BaseEquip> box)
         {
             DecoratorBuilder builder;
             for (int i = 1; i <= boxInfo.Numbers; i++)
             {
-                DecoratorEquipInfo _equip = new() { Equip = box.Invoke() };
+                DecoratorEquipOutput _equip = new() { Equip = box.Invoke() };
                 builder = CreateDecorateBuilder(_equip.Equip, boxInfo);
                 _equip.Equip = (BaseEquip)builder.BuildEquip();
                 _equip.UnhealthyStatuses = builder.GetUnhealthyStatuses();
                 _equip.Elements = builder.GetElements();
                 _equip.GreatElements = builder.GetGreatElements();
                 _equip.PhysicTypes = builder.GetPhysics();
-                result.Equips.Add(_equip);
+                result.Add(_equip);
             }
         }
         /// <summary>  </summary>
@@ -204,6 +289,69 @@ namespace JudeWind.Service.Equips
             builder.SetEquip(equip);
             ServiceExtension.ImportDecorateBuilderItem(builder, _decoratorRepository, boxInfo);
             return builder;
+        }
+        #endregion
+
+        #region <-- StoreBox -->
+        /// <summary>  </summary>
+        /// <param name="numbers">total pickup numbers</param>
+        /// <param name="box">create or find equip func</param>
+        /// <param name="ranLev">itemLevel taker</param>
+        private static List<StoreEquipBoxOutput> StoreBoxing(int numbers, Func<ItemLevel> ranLev, Func<ItemLevel, BaseEquip> box)
+        {
+            List<StoreEquipBoxOutput> _result = [];
+            for (int i = 1; i <= numbers; i++)
+            {
+                var lev = ranLev.Invoke();
+                _result.Add(new() { Equip = box.Invoke(lev), Level = lev });
+            }
+            _result.RemoveAll(e => e.TypeName == nameof(BaseEquip) && e.Equip.Rank <= 0);
+            return _result;
+        }
+        /// <summary>  </summary>
+        /// <param name="result">out put object</param>
+        /// <param name="boxInfo">decorate info</param>
+        /// <param name="box">create or find equip func</param>
+        /// <param name="ranLev">itemLevel taker</param>
+        private void StoreDecorateBoxing(ref List<StoreDecEquipBoxOutput> result, DecoratorEquipBoxInfo boxInfo, Func<ItemLevel> ranLev, Func<ItemLevel, BaseEquip> box)
+        {
+            DecoratorBuilder builder;
+            for (int i = 1; i <= boxInfo.Numbers; i++)
+            {
+                var lev = ranLev.Invoke();
+                StoreDecEquipBoxOutput _equip = new() { Equip = box.Invoke(lev), Level = lev };
+                builder = CreateDecorateBuilder(_equip.Equip, boxInfo);
+                _equip.Equip = (BaseEquip)builder.BuildEquip();
+                _equip.UnhealthyStatuses = builder.GetUnhealthyStatuses();
+                _equip.Elements = builder.GetElements();
+                _equip.GreatElements = builder.GetGreatElements();
+                _equip.PhysicTypes = builder.GetPhysics();
+                result.Add(_equip);
+            }
+        }
+        /// <summary>  </summary>
+        private static void LimitDecorateCount(StoreDecEquipBoxInput input)
+        {
+            foreach (var _boxInfo in input.DecorateBox)
+                ServiceExtension.LimitDecorateCount(_boxInfo);
+        }
+
+        private static Dictionary<ItemLevel, double> BuildRateDic(List<StoreBoxInfo> input)
+        {
+            Dictionary<ItemLevel, double> presentStage;
+            if (input.Count > 1)
+            {
+                var levelBox = input.GroupBy(x => x.Level).Select(x => new StoreBoxInfo() { Level = x.Key, Precent = x.Sum(y => y.Precent) }).OrderBy(x => x.Level);
+                double totalPersent = levelBox.Sum(b => b.Precent);
+                presentStage = [];
+                for (int i = 0; i < levelBox.Count(); i++)
+                {
+                    var item = levelBox.ElementAt(i);
+                    presentStage.Add(item.Level, i == 0 ? item.Precent : presentStage.ElementAt(i - 1).Value + item.Precent);
+                }
+            }
+            else presentStage = new Dictionary<ItemLevel, double>() { { input[0].Level, 1 } };
+            return presentStage;
         }
         #endregion
 
@@ -301,6 +449,8 @@ namespace JudeWind.Service.Equips
             })
         };
         #endregion
+
+        bool CanRemove(DecoratorEquipOutput e) => e.TypeName == nameof(BaseEquip) && e.Equip.Rank <= 0;
         #endregion
     }
 }

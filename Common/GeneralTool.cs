@@ -47,5 +47,41 @@ namespace Common
                 words.Append(ranBox[ran.Next(ranBox.Count)]);
             return words.ToString();
         }
+
+        /// <summary> Get random stage number from <paramref name="stages"/> </summary>
+        /// <param name="stages">range array</param>
+        /// <returns></returns>
+        public static long StageRandom(long[] stages)
+        {
+            if (stages.Length == 1) return stages[0];
+            stages = [.. stages.OrderBy(n => n)];
+            long min = stages.Min(), max = stages.Max();
+            long randomValue = new Random().NextInt64(min, max + 1);
+            int iRes = 0;
+            for (int i = 1; i < stages.Length; i++)
+            {
+                if (stages[i] == randomValue) { iRes = i; break; }
+                else if (stages[i] > randomValue) { iRes = i - 1; break; }
+            }
+            return stages[iRes];
+        }
+        /// <summary> Get random stage number from <paramref name="stages"/> </summary>
+        /// <param name="stages">range array</param>
+        /// <returns></returns>
+        public static double StageRandom(double[] stages)
+        {
+            if (stages.Length == 1) return stages[0];
+
+            stages = [.. stages.OrderBy(n => n)];
+            double min = stages.Min(), max = stages.Max(), range = max - min;
+            double randomValue = min + range * new Random().NextDouble();
+            int iRes = 0;
+            for (int i = 1; i < stages.Length; i++)
+            {
+                if (stages[i] == randomValue) { iRes = i; break; }
+                else if (stages[i] > randomValue) { iRes = i - 1; break; }
+            }
+            return stages[iRes];
+        }
     }
 }

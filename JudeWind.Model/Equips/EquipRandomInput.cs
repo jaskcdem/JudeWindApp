@@ -15,17 +15,11 @@ namespace JudeWind.Model.Equips
 
         public Armor? Armor { get; set; } = null;
     }
-    /// <summary> Equips info </summary>
-    public class EquipInfo
-    {
-        public BaseEquip Equip { get; set; } = null!;
-        public string TypeName { get => Equip.GetType().Name; }
-    }
     /// <summary> Equips </summary>
     public class EquipOutput
     {
-        /// <summary> equip list </summary>
-        public List<EquipInfo> Equips { get; set; } = [];
+        public BaseEquip Equip { get; set; } = null!;
+        public string TypeName { get => Equip.GetType().Name; }
     }
     #endregion
 
@@ -39,13 +33,6 @@ namespace JudeWind.Model.Equips
 
     /// <summary> Decorate Equip </summary>
     public class DecoratorEquipOutput
-    {
-        /// <summary> Decorate Equips info </summary>
-        public List<DecoratorEquipInfo> Equips { get; set; } = [];
-    }
-
-    /// <summary> Decorate Equip info </summary>
-    public class DecoratorEquipInfo
     {
         public BaseEquip Equip { get; set; } = null!;
         public string TypeName { get => Equip.GetType().Name; }
