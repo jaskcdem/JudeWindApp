@@ -14,17 +14,11 @@ namespace JudeWind.Model.Items
 
         public PotionRepository.PotionType? Potion { get; set; } = null;
     }
-    /// <summary> Classic Potions info </summary>
-    public class ClassicPotionInfo
-    {
-        public BasePotion Potion { get; set; } = null!;
-        public string TypeName { get => Potion.GetType().Name; }
-    }
     /// <summary> Classic Potions </summary>
     public class ClassicPotionOutput
     {
-        /// <summary> potion list </summary>
-        public List<ClassicPotionInfo> Potions { get; set; } = [];
+        public BasePotion Potion { get; set; } = null!;
+        public string TypeName { get => Potion.GetType().Name; }
     }
     #endregion
 
@@ -38,13 +32,6 @@ namespace JudeWind.Model.Items
 
     /// <summary> Decorate Classic Potion </summary>
     public class DecoratorClassicPotionOutput
-    {
-        /// <summary> Decorate Classic Potions info </summary>
-        public List<DecoratorClassicPotionInfo> Potions { get; set; } = [];
-    }
-
-    /// <summary> Decorate Classic Potion info </summary>
-    public class DecoratorClassicPotionInfo
     {
         public BasePotion Potion { get; set; } = null!;
         public string TypeName { get => Potion.GetType().Name; }

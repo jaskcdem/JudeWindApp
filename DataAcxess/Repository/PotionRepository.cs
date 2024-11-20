@@ -37,7 +37,7 @@ namespace DataAcxess.Repository
         {
             short rank = this.GetRandomRank();
             var query = PotionList.Where(p => p.potion == ptype);
-            if (!query.Any()) return new BasePotion(rank);
+            if (!query.Any()) return new BasePotion(0);
             var (potion, defName, values) = query.ElementAt(Utility.RandomInt(query.Count()));
             BasePotion item = ptype switch
             {

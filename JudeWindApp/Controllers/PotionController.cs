@@ -11,10 +11,10 @@ namespace JudeWindApp.Controllers
 
         /// <summary> 藥水箱 </summary>
         [HttpPost]
-        public ClassicPotionOutput RandomPotionBox(ClassicPotionRandomInput input) => _potionService.RandomClassicPotionBox(input);
+        public List<ClassicPotionOutput> RandomPotionBox(ClassicPotionRandomInput input) => _potionService.RandomClassicPotionBox(input);
 
         /// <summary> 彩蛋藥水箱 </summary>
         [HttpPost]
-        public DecoratorClassicPotionOutput RandomDecPotionBox(DecoratorClassicPotionInput input) => _potionService.RandomDecClassicPotionBox(input);
+        public List<DecoratorClassicPotionOutput> RandomDecPotionBox(DecoratorClassicPotionInput input) => _potionService.RandomDecClassicPotionBox(input);
     }
 }
