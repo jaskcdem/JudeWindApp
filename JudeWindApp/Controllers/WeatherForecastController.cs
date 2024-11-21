@@ -36,6 +36,46 @@ namespace JudeWindApp.Controllers
             .ToArray();
         }
 
+        /// <summary> list Controller method </summary>
+        [HttpGet(Name = "API")]
+        public List<string> Api()
+        {
+            List<string> result = [];
+            var baseType = typeof(ControllerBase);
+            var path = AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory;
+            var referencedAssemblies = Directory.GetFiles(path, "*.dll").Select(System.Reflection.Assembly.LoadFrom).ToArray();
+            var controllers = referencedAssemblies.SelectMany(a => a.DefinedTypes).Select(ti => ti.AsType()).Where(t => t != baseType && !t.IsAbstract && baseType.IsAssignableFrom(t)).ToArray();
+            Dictionary<Type, string> httpmethods = new()
+            {
+                { typeof(HttpGetAttribute), "GET"},
+                { typeof(HttpPostAttribute), "POST"},
+                { typeof(HttpPutAttribute), "PUT"},
+                { typeof(HttpDeleteAttribute), "DELETE"},
+                { typeof(HttpHeadAttribute), "HEAD"},
+                { typeof(HttpPatchAttribute), "PATCH"},
+                { typeof(HttpOptionsAttribute), "OPTIONS"},
+            };
+            foreach (var controller in controllers)
+            {
+                var members = controller.GetMembers().Where(m => m.MemberType == System.Reflection.MemberTypes.Method);
+                if (controller.GetCustomAttributes(typeof(RouteAttribute), true) is not RouteAttribute?[] route || !route.Any(x => x != null)) continue;
+                foreach (var member in members)
+                {
+                    foreach (var dic in httpmethods)
+                    {
+                        var attr = member.GetCustomAttributes(dic.Key, false);
+                        if (attr != null && attr.Length > 0)
+                        {
+                            var url = GetUrl(route.Last()!, controller.Name, member.Name);
+                            result.Add($"{dic.Value} \\{url}");
+                            break;
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
 #if DEBUG
         /// <summary> Download Img sample </summary>
         [HttpGet]
@@ -44,5 +84,12 @@ namespace JudeWindApp.Controllers
         [BypassApiResult]
         public IActionResult DownloadImg() => DownloadPhysicalFile(@"C:\Projects\download\2024-09-18\IMG_2047.jpg");
 #endif
+
+        static string GetUrl(RouteAttribute route, string controllerName, string actionName) => route.Template
+            .Replace("[controller]", controllerName, StringComparison.CurrentCultureIgnoreCase)
+            .Replace("[action]", actionName, StringComparison.CurrentCultureIgnoreCase)
+            .Replace("Controller", "", StringComparison.CurrentCultureIgnoreCase)
+            .Replace("Async", "", StringComparison.CurrentCultureIgnoreCase)
+            .Replace("/", "\\");
     }
 }
