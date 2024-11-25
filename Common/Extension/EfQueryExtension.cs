@@ -59,6 +59,27 @@ namespace Common.Extension
             return lambda.Compile();
         }
 
+        /// <summary> Wheres if. </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="condition">if set to <c>true</c> [condition].</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns></returns>
+        public static IQueryable<TEntity> WhereIf<TEntity>(this IQueryable<TEntity> source, bool condition, Expression<Func<TEntity, bool>> predicate)
+            => condition ? source.Where(predicate) : source;
+
+        /// <summary> Wheres if. </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="source">The source.</param>
+        /// <param name="condition">if set to <c>true</c> [condition].</param>
+        /// <param name="predicateGenerator">The predicate generator.</param>
+        /// <returns></returns>
+        public static IQueryable<TEntity> WhereIf<TEntity>(this IQueryable<TEntity> source, bool condition, Func<Expression<Func<TEntity, bool>>> predicateGenerator)
+        {
+            if (condition) source = source.Where(predicateGenerator());
+            return source;
+        }
+
         public static IQueryable<TResult> LeftJoin<TOuter, TInner, TKey, TResult>(
             this IQueryable<TOuter> outer,
             IQueryable<TInner> inner,
