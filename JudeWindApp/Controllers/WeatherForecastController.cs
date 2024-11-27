@@ -8,6 +8,8 @@ namespace JudeWindApp.Controllers
 {
     /// <summary> sample controller </summary>
     [AllowAnonymous]
+    [ApiController]
+    [Route("Weather")]
     public class WeatherForecastController : BaseApiController
     {
         private static readonly string[] Summaries =
@@ -24,7 +26,7 @@ namespace JudeWindApp.Controllers
         }
 
         /// <summary> sample Controller method </summary>
-        [HttpGet(Name = "GetWeatherForecast")]
+        [HttpGet("Forecast")]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -37,7 +39,7 @@ namespace JudeWindApp.Controllers
         }
 
         /// <summary> list Controller method </summary>
-        [HttpGet(Name = "API")]
+        [HttpGet("API")]
         public List<string> Api()
         {
             List<string> result = [];

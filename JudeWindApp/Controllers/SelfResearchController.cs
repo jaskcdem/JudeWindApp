@@ -5,7 +5,7 @@ namespace JudeWindApp.Controllers
     /// <summary> something note </summary>
     public class SelfResearchController : Controller
     {
-    /// <summary> <see cref="Path.Combine(string, string)"/> </summary>
+        /// <summary> <see cref="Path.Combine(string, string)"/> </summary>
         public List<string> PathCombine()
         {
             List<string> _result = [];

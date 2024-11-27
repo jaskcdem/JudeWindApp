@@ -11,7 +11,17 @@ namespace DataAcxess.LogContext
         public SuitEquipLog() { }
         public SuitEquipLog(BaseEquip baseEquip)
         {
-            Utility.Cast(baseEquip, this);
+            Rank = baseEquip.Rank;
+            Mhp = baseEquip.Mhp;
+            Mmp = baseEquip.Mmp;
+            Atk = baseEquip.Atk;
+            Def = baseEquip.Def;
+            Mat = baseEquip.Mat;
+            Mdf = baseEquip.Mdf;
+            Agi = baseEquip.Agi;
+            Name = baseEquip.Name;
+            Price = baseEquip.Price;
+            Note = baseEquip.Note;
         }
         public SuitEquipLog(params SuitEquipLog[] logs)
         {

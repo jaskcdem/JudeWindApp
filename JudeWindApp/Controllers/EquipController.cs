@@ -44,8 +44,8 @@ namespace JudeWindApp.Controllers
         public List<BaseEquip> SuitEquipBag(SuitEquipInput input) => _equipService.SuitEquipBag(input);
         /// <summary> 匯出裝備套組 </summary>
         /// <remarks><list type="table">fileType:
-        /// <item><term>1</term><description> xlsx </description></item>
-        /// <item><term>2</term><description> ods </description></item>
+        /// <item><term>1</term><description> xlsx </description></item>,
+        /// <item><term>2</term><description> ods </description></item>,
         /// <item><term>3</term><description> pdf </description></item>
         /// </list></remarks>
         [HttpPost]
@@ -58,9 +58,9 @@ namespace JudeWindApp.Controllers
         };
         /// <summary> 匯出裝備套組 </summary>
         /// <remarks><list type="table">fileType:
-        /// <item><term>1</term><description> xlsx </description></item>
-        /// <item><term>2</term><description> ods </description></item>
-        /// <item><term>3</term><description> pdf </description></item>
+        /// <item><term>1</term><description> xlsx </description></item>,
+        /// <item><term>2</term><description> ods </description></item>,
+        /// <item><term>3</term><description> pdf </description></item>,
         /// <item><term>4</term><description> ods spirt </description></item>
         /// </list></remarks>
         [HttpGet]
