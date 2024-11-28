@@ -24,11 +24,7 @@ namespace DataAcxess.Repository
         #endregion
 
         #region methods
-        public BasePotion GetFullRandomPotion()
-        {
-            PotionType _ptype = potionTypes[Utility.RandomInt(potionTypes.Length)].ToEnum<PotionType>();
-            return GetRandomPotion(_ptype);
-        }
+        public BasePotion GetFullRandomPotion() => GetRandomPotion(potionTypes[Utility.RandomInt(potionTypes.Length)].ToEnum<PotionType>());
         public BasePotion GetRandomPotion(PotionType ptype) => CreatePotion(ptype);
         #endregion
 

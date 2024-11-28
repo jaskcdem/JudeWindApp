@@ -5,7 +5,6 @@ using GreenUtility;
 using GreenUtility.Equip;
 using System.ComponentModel;
 using static GreenUtility.RPGSetting;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DataAcxess.Repository
 {
