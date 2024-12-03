@@ -112,6 +112,8 @@ namespace JudeWind.Model.Base
         /// <summary> Page <paramref name="data"/> and add into <see cref="Detail"/> </summary>
         public void PaggingCast<TRes>(IEnumerable<TRes> data) where TRes : class
         {
+            if (data.GetType().BaseType != Detail.GetType().BaseType)
+                throw new TypeAccessException($"{data.GetType().Name} and {Detail.GetType()} must under same BaseType");
             if (UsingPaging && Detail != null && Count > 0)
             {
                 int _ingore = (Page - 1) * Size;

@@ -3,10 +3,10 @@ using System.Reflection;
 
 namespace JudeWindApp.Util;
 /// <summary>  </summary>
-public class KaiuResolverHelper : IFontResolver
+public class WindResolverHelper : IFontResolver
 {
     /// <summary>  </summary>
-    public static readonly KaiuResolverHelper Instance = new();
+    public static readonly WindResolverHelper Instance = new();
 
     /// <summary> 字體名稱 </summary>
     public string DefaultFontName => "標楷體";
@@ -26,7 +26,7 @@ public class KaiuResolverHelper : IFontResolver
     /// <remarks>請確保字體文件存在並路徑正確</remarks>
     public byte[]? GetFont(string faceName) => faceName switch
     {
-        "KaiU" => LoadFontData("JudeWindApp.KaiU.ttf"),
+        "KaiU" => LoadFontData("JudeWindApp.WindFont.ttf"),
         _ => null,
     };
 

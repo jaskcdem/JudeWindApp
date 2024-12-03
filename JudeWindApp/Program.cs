@@ -7,7 +7,7 @@ using PdfSharp.Fonts;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-GlobalFontSettings.FontResolver = KaiuResolverHelper.Instance;
+GlobalFontSettings.FontResolver = WindResolverHelper.Instance;
 
 builder.Services.AddControllers().AddJsonOptions(option =>
 {
