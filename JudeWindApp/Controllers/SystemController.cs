@@ -3,6 +3,7 @@ using JudeWind.Model.Base;
 using JudeWind.Model.DbSystem;
 using JudeWind.Service.DbSystem;
 using JudeWind.Service.Register;
+using JudeWindApp.Util;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JudeWindApp.Controllers
@@ -10,12 +11,13 @@ namespace JudeWindApp.Controllers
     /// <summary> System Info </summary>
     [ApiController]
     [Route("Sys")]
-    public class SystemController(DbsysService dbsysService, UserInfoService userInfoService, RoleService roleService, LoginService loginService) : BaseApiController
+    public class SystemController(DbsysService dbsysService, UserInfoService userInfoService, RoleService roleService, LoginService loginService, ICodeValidator codeValidator) : BaseApiController
     {
         private readonly DbsysService _dbsysService = dbsysService;
         private readonly UserInfoService _userInfoService = userInfoService;
         private readonly RoleService _roleService = roleService;
         private readonly LoginService _loginService = loginService;
+        private readonly ICodeValidator _codeValidator = codeValidator;
 
         #region <-- Dbsys -->
         /// <summary> 取得系統類別 </summary>
@@ -184,6 +186,16 @@ namespace JudeWindApp.Controllers
             return await _loginService.UserLogin(user);
         }
         #endregion
+
+        /// <summary> 產生驗證碼 </summary>
+        [HttpGet]
+        [Route("Vcode/generate")]
+        public ActionResult<string> Generate() => Ok(_codeValidator.Generate());
+
+        /// <summary> 比對驗證碼 </summary>
+        [HttpGet]
+        [Route("Vcode/validate/{code}")]
+        public ActionResult Validate(string code) => _codeValidator.Validate(code) ? Ok() : BadRequest();
 
         /// <summary> 取得系統代碼樹 </summary>
         static JudeTree<SysCodeOutput> GetSysCodeTree(List<SysCodeOutput> codes)

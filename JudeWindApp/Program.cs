@@ -22,6 +22,12 @@ builder.Services.AddRepository();
 builder.Services.AddIDataService();
 builder.Services.AddDataService();
 builder.Services.AddScoped(svc => new LogsService());
+builder.Services.AddScoped(typeof(ICodeValidator), typeof(CodeValidator));
+
+builder.Services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromMinutes(10); //You can set Time
+});
+builder.Services.AddHttpContextAccessor();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
@@ -48,6 +54,7 @@ builder.Services.AddMvc(options =>
 {
     options.Filters.Add<ExceptionFilter>();
 });
+builder.Services.AddDistributedMemoryCache();
 
 Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
 {
@@ -61,6 +68,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c => c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None));
 }
+
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
