@@ -75,5 +75,11 @@ namespace JudeWindApp.Controllers
         /// <summary> 匯出裝備套組Log </summary>
         [HttpGet]
         public IActionResult ExportSuitLogExcel() => DownloadFileContent(_equipService.ExportSuitLogExcel(), $"套組Log-{DateTime.Now:yyyyMMddHHmm}.xlsx");
+        /// <summary> 匯出裝備套組Log </summary>
+        [HttpGet]
+        public IActionResult ExportSuitLogEpExcel() => DownloadFileContent(_equipService.ExportSuitLogExcelEp(), $"套組Log-{DateTime.Now:yyyyMMddHHmm}.xlsx");
+        /// <summary> 匯出裝備套組Log </summary>
+        [HttpGet]
+        public IActionResult ExportSuitLogEpTitleExcel() => DownloadFileContent(_equipService.ExportSuitLogExcelEpWithTitle(), $"套組Log-{DateTime.Now:yyyyMMddHHmm}.xlsx");
     }
 }

@@ -172,6 +172,60 @@ namespace JudeWind.Service.Equips
             foreach (var name in suitTypes) _suits.AddRange(_equipRepository.CountSuitPoint(name.ToEnum<EquipRepository.SuitEquipType>()));
             return ExportHelper.ExportExcel(GetSimpleExcel(_suits));
         }
+        public byte[] ExportSuitLogExcelEp()
+        {
+            List<SuitEquipLog> _suits = [];
+            foreach (var name in suitTypes) _suits.AddRange(_equipRepository.CountSuitPoint(name.ToEnum<EquipRepository.SuitEquipType>()));
+
+            (string header, int index, Func<SuitEquipLog, object> selector)[] columns = [
+                ("名稱", 1, s => s.Name), ("品級", 2, s => s.Rank), ("最大血量", 3, s => s.Mhp), ("最大魔力", 4, s => s.Mmp),
+                ("攻擊力", 5, s => s.Atk), ("防禦力", 6, s => s.Def), ("魔法攻擊", 7, s => s.Mat), ("魔法防禦", 8, s => s.Mdf),
+                ("敏捷", 9, s => s.Agi), ("稀有度", 10, s => s.Level), ("總點數", 11, s => s.TotalPoint), ("比較值", 12, s => s.Compared),
+                ("備註", 13, s => s.Note ?? string.Empty)
+            ];
+            EPExcelHelper<SuitEquipLog> helper = new();
+            var result = helper.InitExport(("SuitLog", _suits, columns), ("SuitLog2", _suits, columns), ("SuitLog3", _suits, columns)).Export();
+            return result ?? throw new NullReferenceException();
+        }
+        public byte[] ExportSuitLogExcelEpWithTitle()
+        {
+            List<SuitEquipLog> _suits = [];
+            foreach (var name in suitTypes) _suits.AddRange(_equipRepository.CountSuitPoint(name.ToEnum<EquipRepository.SuitEquipType>()));
+
+            (string header, int index, Func<SuitEquipLog, object> selector)[] columns = [
+                ("名稱", 1, s => s.Name), ("品級", 2, s => s.Rank), ("最大血量", 3, s => s.Mhp), ("最大魔力", 4, s => s.Mmp),
+                ("攻擊力", 5, s => s.Atk), ("防禦力", 6, s => s.Def), ("魔法攻擊", 7, s => s.Mat), ("魔法防禦", 8, s => s.Mdf),
+                ("敏捷", 9, s => s.Agi), ("稀有度", 10, s => s.Level), ("總點數", 11, s => s.TotalPoint), ("比較值", 12, s => s.Compared),
+                ("備註", 13, s => s.Note ?? string.Empty)
+            ];
+            ExcelCustomTitle[] titles = [
+                new ExcelCustomTitle(){
+                    HeaderRow = 1,
+                    HeaderColumn = [("亞莉亞", new ExcelCustomStyle(){ BackgroungColor = System.Drawing.Color.OrangeRed}),
+                        ("賽娜", new ExcelCustomStyle(){ BackgroungColor = System.Drawing.Color.AliceBlue}),
+                        ("茱麗葉", new ExcelCustomStyle(){ BackgroungColor = System.Drawing.Color.LightGray}),
+                        ("尤彌爾", new ExcelCustomStyle()),
+                ]},
+                new ExcelCustomTitle(){
+                    HeaderRow = 2,
+                    HeaderColumn =[("夏洛特", new ExcelCustomStyle(){ BackgroungColor = System.Drawing.Color.LightYellow}),
+                        ("費南雪", new ExcelCustomStyle(){ BackgroungColor = System.Drawing.Color.Violet}),
+                        ("休凱特", new ExcelCustomStyle(){ BackgroungColor = System.Drawing.Color.LimeGreen})
+                ]},
+                new ExcelCustomTitle(){
+                    HeaderRow = 3,
+                    HeaderColumn = [("甘納許", new ExcelCustomStyle(){ BackgroungColor = System.Drawing.Color.Purple}),
+                        ("舒服蕾", new ExcelCustomStyle(){ BackgroungColor = System.Drawing.Color.Pink}),
+                        ("克拉芙緹", new ExcelCustomStyle(){ BackgroungColor = System.Drawing.Color.Coral}),
+                        ("@@@", new ExcelCustomStyle()),
+                        ("XXX", new ExcelCustomStyle(){ FontColor = System.Drawing.Color.Green}),
+                ]},
+            ];
+
+            EPExcelHelper<SuitEquipLog> helper = new();
+            var result = helper.InitExport(("SuitLog", _suits, columns)).ExportWithTitle((0, titles));
+            return result ?? throw new NullReferenceException();
+        }
         #endregion
 
         #region <-- StoreBox -->
