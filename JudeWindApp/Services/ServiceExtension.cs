@@ -16,7 +16,7 @@ namespace JudeWindApp.Services
         /// <param name="services"></param>
         public static IServiceCollection AddDataService(this IServiceCollection services)
         {
-            #region 依賴註入
+            #region 依賴注入
             var baseType = typeof(BaseService);
             var path = AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory;
             var referencedAssemblies = Directory.GetFiles(path, "*.dll").Select(Assembly.LoadFrom).ToArray();
@@ -33,7 +33,7 @@ namespace JudeWindApp.Services
         /// <param name="services"></param>
         public static IServiceCollection AddIDataService(this IServiceCollection services)
         {
-            #region 依賴註入
+            #region 依賴注入
             var baseType = typeof(IApiService);
             var path = AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory;
             var referencedAssemblies = Directory.GetFiles(path, "*.dll").Select(Assembly.LoadFrom).ToArray();
@@ -66,7 +66,7 @@ namespace JudeWindApp.Services
         public static IServiceCollection AddRepository(this IServiceCollection services)
         {
             services.AddSingleton<DecoratorRepository>();
-            #region 依賴註入
+            #region 依賴注入
             var baseType = typeof(ISampleRepository);
             var path = AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory;
             var referencedAssemblies = Directory.GetFiles(path, "*.dll").Select(Assembly.LoadFrom).ToArray();
