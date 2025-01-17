@@ -15,6 +15,15 @@ namespace JudeWind.Model.Base
             };
             return result;
         }
+        public static BasePageViewModel<T> GetPageResult(Enum ResponseCode, List<T> Data)
+        {
+            BasePageViewModel<T> result = new()
+            {
+                Detail = Data,
+                Code = Convert.ToInt32(ResponseCode)
+            };
+            return result;
+        }
     }
 
     public class BaseResult<T>
@@ -24,9 +33,25 @@ namespace JudeWind.Model.Base
         public string Message { get; set; } = string.Empty;
         public int Code { get; set; }
         public Exception? Exception { get; set; }
+        /// <summary> Clone to new result </summary>
+        public BaseResult<TRust> ToNewResult<TRust>(TRust newData) => new()
+        {
+            Body = newData,
+            Message = Message,
+            Code = Code,
+            Exception = Exception
+        };
+        /// <summary> Clone to new viewModel </summary>
+        public BasePageViewModel<TRust> ToNewModel<TRust>(List<TRust> newData) => new()
+        {
+            Detail = newData,
+            Message = Message,
+            Code = Code,
+            Exception = Exception,
+        };
     }
 
-    public class BaseInput
+    public class BasePageCondition
     {
         /// <summary> 頁次 </summary>
         public int Page { get; set; } = SysSetting.PageDefult;
@@ -37,7 +62,7 @@ namespace JudeWind.Model.Base
         public bool UsingPaging { get; set; } = true;
     }
 
-    public class BaseOutput<TData> : BaseInput
+    public class BasePageViewModel<TData> : BasePageCondition
     {
         #region members
         /// <summary> 資料明細 </summary>
@@ -69,10 +94,15 @@ namespace JudeWind.Model.Base
             }
             set { _totalPage = value; }
         }
+
+        public bool IsSuccess => Code == (int)HttpStatusCode.OK;
+        public string Message { get; set; } = string.Empty;
+        public int Code { get; set; }
+        public Exception? Exception { get; set; }
         #endregion
 
         #region methods
-        public void InitPagging<TInfo>(TInfo info) where TInfo : BaseInput
+        public void InitPagging<TInfo>(TInfo info) where TInfo : BasePageCondition
         {
             if (info != default && UsingPaging)
             {
@@ -120,6 +150,26 @@ namespace JudeWind.Model.Base
                 Detail.AddRange(data.Skip(_ingore).Take(Size).Cast<TData>());
             }
         }
+        /// <summary> Clone to new result </summary>
+        public BaseResult<TRust> ToNewResult<TRust>(TRust newData) => new()
+        {
+            Body = newData,
+            Message = Message,
+            Code = Code,
+            Exception = Exception
+        };
+        /// <summary> Clone to new viewModel </summary>
+        public BasePageViewModel<TRust> ToNewModel<TRust>(List<TRust> newData) => new()
+        {
+            Detail = newData,
+            Message = Message,
+            Code = Code,
+            Exception = Exception,
+            Page = Page,
+            Size = Size,
+            TotalPage = TotalPage,
+            UsingPaging = UsingPaging,
+        };
         #endregion
     }
 }

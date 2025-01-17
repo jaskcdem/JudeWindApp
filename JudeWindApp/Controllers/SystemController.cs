@@ -157,20 +157,20 @@ namespace JudeWindApp.Controllers
         /// <summary> 取得全部使用者授權 </summary>
         [HttpGet]
         [Route("UserRole/Permission")]
-        public async Task<BaseOutput<UserPermissionOutput>> SearchUserPermissionInfo(int page = SysSetting.PageDefult, int size = SysSetting.SizeDefult)
+        public async Task<BasePageViewModel<UserPermissionOutput>> SearchUserPermissionInfo(int page = SysSetting.PageDefult, int size = SysSetting.SizeDefult)
         {
             var _data = await _roleService.SearchUserPermissionInfo();
-            BaseOutput<UserPermissionOutput> result = new() { Detail = _data, Page = page, Size = size };
+            BasePageViewModel<UserPermissionOutput> result = new() { Detail = _data, Page = page, Size = size };
             result.Pagging();
             return result;
         }
         /// <summary> 取得全部使用者權限 </summary>
         [HttpGet]
         [Route("UserRole/Full")]
-        public async Task<BaseOutput<RoleUserOutput>> SearchUserRole(int page = SysSetting.PageDefult, int size = SysSetting.SizeDefult)
+        public async Task<BasePageViewModel<RoleUserOutput>> SearchUserRole(int page = SysSetting.PageDefult, int size = SysSetting.SizeDefult)
         {
             var _data = await _roleService.SearchUserRole();
-            BaseOutput<RoleUserOutput> result = new() { Detail = _data, Page = page, Size = size };
+            BasePageViewModel<RoleUserOutput> result = new() { Detail = _data, Page = page, Size = size };
             result.Pagging();
             return result;
         }
