@@ -1,6 +1,6 @@
 ﻿using Common;
 using DataAcxess.ProjectContext;
-using GreenUtility.Extension;
+using GreenUtility.Cryptographies;
 using JudeWind.Model.DbSystem;
 
 namespace JudeWind.Service.Register

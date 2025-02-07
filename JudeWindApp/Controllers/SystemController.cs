@@ -160,7 +160,7 @@ namespace JudeWindApp.Controllers
         public async Task<BasePageViewModel<UserPermissionOutput>> SearchUserPermissionInfo(int page = SysSetting.PageDefult, int size = SysSetting.SizeDefult)
         {
             var _data = await _roleService.SearchUserPermissionInfo();
-            BasePageViewModel<UserPermissionOutput> result = new() { Detail = _data, Page = page, Size = size };
+            BasePageViewModel<UserPermissionOutput> result = new() { Detail = _data, CurPage = page, Size = size };
             result.Pagging();
             return result;
         }
@@ -170,7 +170,7 @@ namespace JudeWindApp.Controllers
         public async Task<BasePageViewModel<RoleUserOutput>> SearchUserRole(int page = SysSetting.PageDefult, int size = SysSetting.SizeDefult)
         {
             var _data = await _roleService.SearchUserRole();
-            BasePageViewModel<RoleUserOutput> result = new() { Detail = _data, Page = page, Size = size };
+            BasePageViewModel<RoleUserOutput> result = new() { Detail = _data, CurPage = page, Size = size };
             result.Pagging();
             return result;
         }

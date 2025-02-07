@@ -1,4 +1,4 @@
-﻿using GreenUtility.Exception;
+﻿using GreenUtility.Exceptions;
 using GreenUtility.Extension;
 using Microsoft.Data.SqlClient;
 using System.Data;

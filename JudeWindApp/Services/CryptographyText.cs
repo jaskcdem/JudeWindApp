@@ -1,5 +1,5 @@
 ﻿using GreenUtility;
-using GreenUtility.Extension;
+using GreenUtility.Cryptographies;
 using System.Text;
 
 namespace JudeWindApp.Services

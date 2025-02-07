@@ -54,7 +54,8 @@ namespace JudeWind.Model.Base
     public class BasePageCondition
     {
         /// <summary> 頁次 </summary>
-        public int Page { get; set; } = SysSetting.PageDefult;
+        /// <remarks>page為系統保留字,不能用</remarks>
+        public int CurPage { get; set; } = SysSetting.PageDefult;
         /// <summary> 每頁筆數 </summary>
         public int Size { get; set; } = SysSetting.SizeDefult;
         /// <summary> 使用分頁模式 </summary>
@@ -76,20 +77,23 @@ namespace JudeWind.Model.Base
         {
             get
             {
-                _totalPage = SysSetting.PageDefult;
-                try
+                if (_totalPage <= 0)
                 {
-                    if (UsingPaging && Size > 0 && Count > 0)
+                    _totalPage = SysSetting.PageDefult;
+                    try
                     {
-                        if (Count > Size)
+                        if (UsingPaging && Size > 0 && Count > 0)
                         {
-                            _totalPage = Count / Size;
-                            if (Count % Size > 0) _totalPage++;
+                            if (Count > Size)
+                            {
+                                _totalPage = Count / Size;
+                                if (Count % Size > 0) _totalPage++;
+                            }
+                            CurPage = Math.Clamp(CurPage, SysSetting.PageDefult, _totalPage);
                         }
-                        Page = Math.Clamp(Page, SysSetting.PageDefult, _totalPage);
                     }
+                    catch (Exception) { _totalPage = SysSetting.PageDefult; UsingPaging = false; }
                 }
-                catch (Exception) { _totalPage = SysSetting.PageDefult; UsingPaging = false; }
                 return _totalPage;
             }
             set { _totalPage = value; }
@@ -106,8 +110,8 @@ namespace JudeWind.Model.Base
         {
             if (info != default && UsingPaging)
             {
-                Page = Math.Clamp(Page, SysSetting.PageDefult, int.MaxValue);
-                Size = Math.Clamp(Size, SysSetting.SizeDefult, int.MaxValue);
+                CurPage = Math.Clamp(info.CurPage, SysSetting.PageDefult, int.MaxValue);
+                Size = Math.Clamp(info.Size, SysSetting.SizeDefult, int.MaxValue);
             }
         }
 
@@ -116,38 +120,39 @@ namespace JudeWind.Model.Base
         {
             if (UsingPaging && Detail != null && Count > 0)
             {
-                int _ingore = (Page - 1) * Size;
+                int total = TotalPage, _ingore = (CurPage - 1) * Size;
                 Detail = Detail.Skip(_ingore).Take(Size).ToList();
+                TotalPage = total;
             }
         }
         /// <summary> Page <paramref name="data"/> and add into <see cref="Detail"/> </summary>
-        public void Pagging(IEnumerable<TData> data)
+        public void Pagging(IEnumerable<TData> data, int page, int size)
         {
-            if (UsingPaging && Detail != null && Count > 0)
+            if (Detail != null && data.Any())
             {
-                int _ingore = (Page - 1) * Size;
-                Detail.AddRange(data.Skip(_ingore).Take(Size));
+                int _ingore = (page - 1) * size;
+                Detail.AddRange(data.Skip(_ingore).Take(size));
             }
         }
         /// <summary> Page <paramref name="data"/> and return </summary>
-        public IEnumerable<TRes> Pagging<TRes>(IEnumerable<TRes> data) where TRes : class
+        public static IEnumerable<TRes> Pagging<TRes>(IEnumerable<TRes> data, int page, int size) where TRes : class
         {
-            if (UsingPaging && Detail != null && Count > 0)
+            if (data.Any())
             {
-                int _ingore = (Page - 1) * Size;
-                return data.Skip(_ingore).Take(Size);
+                int _ingore = (page - 1) * size;
+                return data.Skip(_ingore).Take(size);
             }
             else return [];
         }
         /// <summary> Page <paramref name="data"/> and add into <see cref="Detail"/> </summary>
-        public void PaggingCast<TRes>(IEnumerable<TRes> data) where TRes : class
+        public void PaggingCast<TRes>(IEnumerable<TRes> data, int page, int size) where TRes : class
         {
             if (data.GetType().BaseType != Detail.GetType().BaseType)
                 throw new TypeAccessException($"{data.GetType().Name} and {Detail.GetType()} must under same BaseType");
-            if (UsingPaging && Detail != null && Count > 0)
+            if (Detail != null && data.Any())
             {
-                int _ingore = (Page - 1) * Size;
-                Detail.AddRange(data.Skip(_ingore).Take(Size).Cast<TData>());
+                int _ingore = (page - 1) * size;
+                Detail.AddRange(data.Skip(_ingore).Take(size).Cast<TData>());
             }
         }
         /// <summary> Clone to new result </summary>
@@ -165,7 +170,7 @@ namespace JudeWind.Model.Base
             Message = Message,
             Code = Code,
             Exception = Exception,
-            Page = Page,
+            CurPage = CurPage,
             Size = Size,
             TotalPage = TotalPage,
             UsingPaging = UsingPaging,
