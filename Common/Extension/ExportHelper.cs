@@ -1,14 +1,18 @@
 ﻿using Aspose.Cells;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using HtmlToOpenXml;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using MiniExcelLibs;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System.Reflection;
-using Column = MigraDoc.DocumentObjectModel.Tables.Column;
 using Cell = MigraDoc.DocumentObjectModel.Tables.Cell;
-using Style = MigraDoc.DocumentObjectModel.Style;
+using Column = MigraDoc.DocumentObjectModel.Tables.Column;
 using Font = MigraDoc.DocumentObjectModel.Font;
+using Paragraph = MigraDoc.DocumentObjectModel.Paragraph;
+using Style = MigraDoc.DocumentObjectModel.Style;
 
 namespace Common.Extension
 {
@@ -63,7 +67,7 @@ namespace Common.Extension
         {
             ArgumentNullException.ThrowIfNull(buildInfo, nameof(buildInfo));
 
-            var document = new Document();
+            var document = new MigraDoc.DocumentObjectModel.Document();
             var section = document.AddSection();
             section.PageSetup.Orientation = buildInfo.Orientation;
             if (buildInfo.NomalStyle != default)
@@ -87,7 +91,7 @@ namespace Common.Extension
         #endregion
 
         #region PDF建立表格
-        private static void PdfTable(ref Document document, ref Section section, PdfTableBuildInfo tableBuildInfo)
+        private static void PdfTable(ref MigraDoc.DocumentObjectModel.Document document, ref Section section, PdfTableBuildInfo tableBuildInfo)
         {
             //pick font info
             var normalStyle = document.Styles.Normal;
@@ -272,6 +276,65 @@ namespace Common.Extension
                 numbers = "0123456789".ToCharArray();
             List<char> box = [.. lowerApla, .. upperApla, .. numbers];
             return box;
+        }
+        #endregion
+
+        #region DOC匯出
+        /// <summary></summary>
+        /// <param name="htmlContent">html：須符合 HtmlToOpenXml(<seealso href="https://github.com/onizet/html2openxml"/>) 格式</param>
+        public static byte[] ExportDoc(string htmlContent)
+        {
+            using var stream = new MemoryStream();
+            using (var wordDocument = WordprocessingDocument.Create(stream, DocumentFormat.OpenXml.WordprocessingDocumentType.Document))
+            {
+                var mainPart = wordDocument.AddMainDocumentPart();
+                mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new Body());
+                HtmlConverter converter = new(mainPart);
+                converter.ParseBody(htmlContent).GetAwaiter().GetResult();
+                mainPart.Document.Save();
+            }
+            return stream.ToArray();
+        }
+
+        public static byte[] ExportDoc(string dotxPath, Dictionary<string, string> placeholders)
+        {
+            using var stream = new MemoryStream();
+            using (var templateStream = new FileStream(dotxPath, FileMode.Open, FileAccess.Read))
+            {
+                templateStream.CopyTo(stream);
+            }
+            using (var wordDocument = WordprocessingDocument.Open(stream, true))
+            {
+                wordDocument.ChangeDocumentType(DocumentFormat.OpenXml.WordprocessingDocumentType.Document);
+                var mainPart = wordDocument.MainDocumentPart ?? throw new InvalidDataException("The template file is not a valid word file.");
+                var document = mainPart.Document;
+
+                foreach (var sdt in document.Descendants<SdtElement>())
+                {
+                    var sdtAlias = sdt.SdtProperties?.GetFirstChild<SdtAlias>();
+                    if (sdtAlias != null && sdtAlias.Val != null && placeholders.ContainsKey(sdtAlias.Val!))
+                    {
+                        var text = sdt.Descendants<DocumentFormat.OpenXml.Wordprocessing.Text>().FirstOrDefault();
+                        if (text != null)
+                        {
+                            text.Text = placeholders[sdtAlias.Val!];
+                            continue;
+                        }
+                    }
+                    var sdtTag = sdt.SdtProperties?.GetFirstChild<Tag>();
+                    if (sdtTag != null && sdtTag.Val != null && placeholders.ContainsKey(sdtTag.Val!))
+                    {
+                        var text = sdt.Descendants<DocumentFormat.OpenXml.Wordprocessing.Text>().FirstOrDefault();
+                        if (text != null)
+                        {
+                            text.Text = placeholders[sdtTag.Val!];
+                            continue;
+                        }
+                    }
+                }
+                document.Save();
+            }
+            return stream.ToArray();
         }
         #endregion
     }
