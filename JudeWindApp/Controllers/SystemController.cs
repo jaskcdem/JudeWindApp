@@ -1,4 +1,5 @@
 ﻿using Common;
+using GreenUtility;
 using JudeWind.Model.Base;
 using JudeWind.Model.DbSystem;
 using JudeWind.Service.DbSystem;
@@ -40,7 +41,7 @@ namespace JudeWindApp.Controllers
         /// <summary> 取得系統代碼 </summary>
         [HttpGet]
         [Route("Codes/List")]
-        public async Task<JudeTree<SysCodeOutput>> GetCodes(string typeName) => GetSysCodeTree(await _dbsysService.GetCodes(typeName));
+        public async Task<GreenTree<SysCodeOutput>> GetCodes(string typeName) => GetSysCodeTree(await _dbsysService.GetCodes(typeName));
         /// <summary> 新增系統代碼 </summary>
         [HttpPost]
         [Route("Codes")]
@@ -198,15 +199,15 @@ namespace JudeWindApp.Controllers
         public ActionResult Validate(string code) => _codeValidator.Validate(code) ? Ok() : BadRequest();
 
         /// <summary> 取得系統代碼樹 </summary>
-        static JudeTree<SysCodeOutput> GetSysCodeTree(List<SysCodeOutput> codes)
+        static GreenTree<SysCodeOutput> GetSysCodeTree(List<SysCodeOutput> codes)
         {
             //JudeTree<SysCodeOutput> codeTree = new();
-            List<(int level, List<JudeTreeNode<SysCodeOutput>> nodes)> codeTree = [];
+            List<(int level, List<GreenTreeNode<SysCodeOutput>> nodes)> codeTree = [];
             int _floor = 1, maxFloor = codes.Max(c => c.Level);
             while (_floor <= maxFloor)
             {
                 var floorCodes = codes.Where(c => c.Level == _floor).OrderBy(c => c.ParentPath).ThenBy(c => c.Code);
-                if (_floor == 1) codeTree.Add((_floor, floorCodes.Select(x => new JudeTreeNode<SysCodeOutput>(x)).ToList()));
+                if (_floor == 1) codeTree.Add((_floor, floorCodes.Select(x => new GreenTreeNode<SysCodeOutput>(x)).ToList()));
                 else
                 {
                     var parentList = codeTree.Where(x => x.level == (_floor - 1)).SelectMany(x => x.nodes);
@@ -215,8 +216,8 @@ namespace JudeWindApp.Controllers
                         string _parentsPath = $"{parent.Data.ParentPath}/{parent.Data.Code}";
                         var _childs = floorCodes.Where(c => c.ParentPath == $"{_parentsPath}/{c.Code}");
                         foreach (var child in _childs)
-                            parent.AddLastChild(new JudeTreeNode<SysCodeOutput>(child) { Parent = parent });
-                        codeTree.Add((_floor, _childs.Select(x => new JudeTreeNode<SysCodeOutput>(x)).ToList()));
+                            parent.AddLastChild(new GreenTreeNode<SysCodeOutput>(child) { Parent = parent });
+                        codeTree.Add((_floor, _childs.Select(x => new GreenTreeNode<SysCodeOutput>(x)).ToList()));
                     }
                 }
                 _floor++;
