@@ -9,7 +9,7 @@
 1. ASP.NET and Web Tools
 2. C# Tool
 3. Entity Framework Core Power Tools
-4. GitHub Copilot
+4. GitHub Copilot (Selectable)
 5. Microsoft JVM Debugger
 6. NuGet Manager
 7. Visual Studio IntelliCode
@@ -26,7 +26,8 @@
 4. ModelVertify -> DataAcxess.Extension.MetaDataVertifier
 5. SqlBuilder -> DataAcxess.Extension.BigSqlBuilder
 6. Dependency Injection -> JudeWindApp.Services.ServiceExtension
-7. EF-CRUUD -> JudeWindApp.Controllers.SystemController
+7. EF-CRUD -> JudeWindApp.Controllers.SystemController
+8. JWT -> Common.GeneralTool
 
 </details>
 
