@@ -188,15 +188,31 @@ namespace JudeWindApp.Controllers
         }
         #endregion
 
-        /// <summary> 產生驗證碼 </summary>
+        /// <summary>產生驗證碼</summary>
         [HttpGet]
         [Route("Vcode/generate")]
         public ActionResult<string> Generate() => Ok(_codeValidator.Generate());
-
-        /// <summary> 比對驗證碼 </summary>
+        /// <summary>比對驗證碼</summary>
         [HttpGet]
         [Route("Vcode/validate/{code}")]
         public ActionResult Validate(string code) => _codeValidator.Validate(code) ? Ok() : BadRequest();
+
+        /// <summary>測試JWT</summary>
+        [HttpGet]
+        [Route("JWT/Test/{user}")]
+        public ActionResult<string> JwtTest(string user)
+        {
+            var payload = GeneralTool.CreatePayLoad(new Dictionary<string, object>
+            {
+                { "aud", user },
+                { "Role", "Admin" }
+            });
+            return GeneralTool.GenerateToken(payload);
+        }
+        /// <summary>驗證JWT</summary>
+        [HttpPost]
+        [Route("JWT/Check")]
+        public ActionResult<bool> JwtCheck(string token, string user) => GeneralTool.VerifyToken(token, x => x == user);
 
         /// <summary> 取得系統代碼樹 </summary>
         static GreenTree<SysCodeOutput> GetSysCodeTree(List<SysCodeOutput> codes)
