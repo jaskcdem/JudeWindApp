@@ -17,29 +17,21 @@ namespace JudeWindApp.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         ];
 
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        /// <summary> sample controller </summary>
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
-        {
-            _logger = logger;
-        }
-
         /// <summary> sample Controller method </summary>
         [HttpGet("Forecast")]
+        [NonAction]
         public IEnumerable<WeatherForecast> Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            return [.. Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
                 TemperatureC = Random.Shared.Next(-20, 55),
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            })];
         }
 
         /// <summary> list Controller method </summary>
-        [HttpGet("API")]
+        [HttpOptions("API")]
         public List<string> Api()
         {
             List<string> result = [];
@@ -49,13 +41,11 @@ namespace JudeWindApp.Controllers
             var controllers = referencedAssemblies.SelectMany(a => a.DefinedTypes).Select(ti => ti.AsType()).Where(t => t != baseType && !t.IsAbstract && baseType.IsAssignableFrom(t)).ToArray();
             Dictionary<Type, string> httpmethods = new()
             {
-                { typeof(HttpGetAttribute), "GET"},
-                { typeof(HttpPostAttribute), "POST"},
-                { typeof(HttpPutAttribute), "PUT"},
-                { typeof(HttpDeleteAttribute), "DELETE"},
-                { typeof(HttpHeadAttribute), "HEAD"},
-                { typeof(HttpPatchAttribute), "PATCH"},
-                { typeof(HttpOptionsAttribute), "OPTIONS"},
+                { typeof(HttpGetAttribute), "GET"}, //Serach or query -> not body
+                { typeof(HttpPostAttribute), "POST"}, //Create
+                { typeof(HttpPutAttribute), "PUT"}, //Replace (Create or Update)
+                { typeof(HttpDeleteAttribute), "DELETE"}, //Delete
+                { typeof(HttpPatchAttribute), "PATCH"}, //Update part
             };
             foreach (var controller in controllers)
             {
@@ -84,7 +74,7 @@ namespace JudeWindApp.Controllers
         [ProducesResponseType(typeof(FileResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
         [BypassApiResult]
-        public IActionResult DownloadImg() => DownloadPhysicalFile(@"C:\Projects\download\2024-09-18\IMG_2047.jpg");
+        public IActionResult DownloadImg(string path) => DownloadPhysicalFile(path);
 #endif
 
         static string GetUrl(RouteAttribute route, string controllerName, string actionName) => route.Template

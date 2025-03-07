@@ -5,6 +5,7 @@ using JudeWind.Model.DbSystem;
 using JudeWind.Service.DbSystem;
 using JudeWind.Service.Register;
 using JudeWindApp.Util;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JudeWindApp.Controllers
@@ -103,59 +104,59 @@ namespace JudeWindApp.Controllers
         #endregion
 
         #region <-- Role -->
-        /// <summary> 權限群組清單 </summary>
+        /// <summary>權限群組清單</summary>
         [HttpGet]
         [Route("Roles/List")]
         public async Task<List<RoleOutput>> GetRoles() => await _roleService.GetRoles();
-        /// <summary> 新增權限群組 </summary>
+        /// <summary>新增權限群組</summary>
         [HttpPost]
         [Route("Roles")]
         public async Task AddRole(SysRoleInput input) => await _roleService.AddRole(input);
-        /// <summary> 編輯權限群組 </summary>
+        /// <summary>編輯權限群組</summary>
         [HttpPut]
         [Route("Roles")]
         public async Task EditRole(SysRoleInput input) => await _roleService.EditRole(input);
-        /// <summary> 移除權限群組 </summary>
+        /// <summary>移除權限群組</summary>
         /// <param name="rgid">角色id</param>
         [HttpDelete]
         [Route("Roles")]
-        public async Task DeleteRole([FromBody] string rgid) => await _roleService.DeleteRole(rgid);
-        /// <summary> 是否重名 </summary>
+        public async Task DeleteRole(string rgid) => await _roleService.DeleteRole(rgid);
+        /// <summary>是否重名</summary>
         /// <param name="roleName">角色名稱</param>
-        [HttpHead]
-        [Route("Roles")]
-        public async Task<bool> HadSameRoleName([FromBody] string roleName) => await _roleService.HadSameName(roleName);
-        /// <summary> 是否有資料 </summary>
+        [HttpGet]
+        [Route("Roles/{roleName}")]
+        public async Task<bool> HadSameRoleName(string roleName) => await _roleService.HadSameName(roleName);
+        /// <summary>是否有資料</summary>
         /// <param name="rgid">角色id</param>
-        [HttpHead]
-        [Route("Roles/Exist")]
-        public async Task<bool> IsRoleExist([FromBody] string rgid) => await _roleService.IsExist(rgid);
-        /// <summary> 是否有使用者有此權限 </summary>
+        [HttpGet]
+        [Route("Roles/Exist/{rgid}")]
+        public async Task<bool> IsRoleExist(string rgid) => await _roleService.IsExist(rgid);
+        /// <summary>是否有使用者有此權限</summary>
         /// <param name="rgid">角色id</param>
-        [HttpHead]
-        [Route("Roles/User")]
-        public async Task<bool> HadUserInRole([FromBody] string rgid) => await _roleService.HadUserInRole(rgid);
+        [HttpGet]
+        [Route("Roles/User/{rgid}")]
+        public async Task<bool> HadUserInRole(string rgid) => await _roleService.HadUserInRole(rgid);
 
-        /// <summary> 取得使用者權限 </summary>
+        /// <summary>取得使用者權限</summary>
         /// <param name="userId">使用者Id</param>
         [HttpGet]
-        [Route("UserRole/List")]
-        public async Task<RoleUserOutput> GetUserRole([FromBody] string userId) => await _roleService.GetUserRole(userId);
-        /// <summary> 更新使用者權限 </summary>
+        [Route("UserRole/List/{userid}")]
+        public async Task<RoleUserOutput> GetUserRole(string userId) => await _roleService.GetUserRole(userId);
+        /// <summary> 更新使用者權限</summary>
         [HttpPost]
         [Route("UserRole")]
         public async Task UpgradeUserRole(SysRoleUserInput input) => await _roleService.UpgradeUserRole(input);
-        /// <summary> 取得使用者授權 </summary>
+        /// <summary>取得使用者授權</summary>
         /// <param name="userId">使用者Id</param>
         [HttpGet]
-        [Route("UserRole")]
-        public async Task<UserPermissionOutput> GetUserPermissionInfo([FromBody] string userId) => await _roleService.GetUserPermissionInfo(userId);
-        /// <summary> 更新授權 </summary>
+        [Route("UserRole/{userid}")]
+        public async Task<UserPermissionOutput> GetUserPermissionInfo(string userId) => await _roleService.GetUserPermissionInfo(userId);
+        /// <summary>更新授權</summary>
         [HttpPost]
         [Route("UserRole/Permission")]
         public async Task UpgradePermission(SysRolePermissionInput input) => await _roleService.UpgradePermission(input);
 
-        /// <summary> 取得全部使用者授權 </summary>
+        /// <summary>取得全部使用者授權</summary>
         [HttpGet]
         [Route("UserRole/Permission")]
         public async Task<BasePageViewModel<UserPermissionOutput>> SearchUserPermissionInfo(int page = SysSetting.PageDefult, int size = SysSetting.SizeDefult)
@@ -165,7 +166,7 @@ namespace JudeWindApp.Controllers
             result.Pagging();
             return result;
         }
-        /// <summary> 取得全部使用者權限 </summary>
+        /// <summary>取得全部使用者權限</summary>
         [HttpGet]
         [Route("UserRole/Full")]
         public async Task<BasePageViewModel<RoleUserOutput>> SearchUserRole(int page = SysSetting.PageDefult, int size = SysSetting.SizeDefult)
@@ -178,9 +179,10 @@ namespace JudeWindApp.Controllers
         #endregion
 
         #region <-- Login -->
-        /// <summary> 使用者登入 </summary>
+        /// <summary>使用者登入</summary>
         [HttpPost]
         [Route("Login")]
+        [AllowAnonymous]
         public async Task<LoginResult> UserLogin(UserLogin user)
         {
             user.Ip = IPAddress;
@@ -191,15 +193,18 @@ namespace JudeWindApp.Controllers
         /// <summary>產生驗證碼</summary>
         [HttpGet]
         [Route("Vcode/generate")]
+        [AllowAnonymous]
         public ActionResult<string> Generate() => Ok(_codeValidator.Generate());
         /// <summary>比對驗證碼</summary>
         [HttpGet]
         [Route("Vcode/validate/{code}")]
+        [AllowAnonymous]
         public ActionResult Validate(string code) => _codeValidator.Validate(code) ? Ok() : BadRequest();
 
         /// <summary>測試JWT</summary>
         [HttpGet]
         [Route("JWT/Test/{user}")]
+        [AllowAnonymous]
         public ActionResult<string> JwtTest(string user)
         {
             var payload = GeneralTool.CreatePayLoad(new Dictionary<string, object>
@@ -212,6 +217,7 @@ namespace JudeWindApp.Controllers
         /// <summary>驗證JWT</summary>
         [HttpPost]
         [Route("JWT/Check")]
+        [AllowAnonymous]
         public ActionResult<bool> JwtCheck(string token, string user) => GeneralTool.VerifyToken(token, x => x == user);
 
         /// <summary> 取得系統代碼樹 </summary>

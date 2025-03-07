@@ -13,7 +13,6 @@
     <PackageReference Include="HtmlToOpenXml.dll" Version="3.2.2" />
     <PackageReference Include="JWT" Version="11.0.0" />
     <PackageReference Include="MiniExcel" Version="1.35.0" />
-    <PackageReference Include="NLog" Version="5.3.4" />
     <PackageReference Include="PDFsharp" Version="6.1.1" />
     <PackageReference Include="PDFsharp-MigraDoc" Version="6.1.1" />
     <PackageReference Include="System.Formats.Asn1" Version="6.0.1" />

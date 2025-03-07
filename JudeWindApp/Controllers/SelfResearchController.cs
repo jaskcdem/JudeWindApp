@@ -49,7 +49,7 @@ namespace JudeWindApp.Controllers
         [HttpGet("Doc/Html")]
         public IActionResult DocHtml()
         {
-            string html = @"<h1>艾帝浦杰人員專業經歷表</h1>
+            string html = @"<h1>冰冰秀人員專業經歷表</h1>
     <h2>基本資料</h2>
     <table>
       <tr><td>中文姓名</td><td>張三</td></tr>

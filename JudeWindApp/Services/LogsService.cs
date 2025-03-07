@@ -1,44 +1,46 @@
-﻿using Common;
-using JudeWindApp.ViewModel;
+﻿using JudeWindApp.ViewModel;
 using NLog;
-using System;
-using System.Threading.Tasks;
+using NLog.Web;
 
 namespace JudeWindApp.Services
 {
     /// <summary> 登入邏輯 </summary>
     public class LogsService
     {
-        #region Private Members
-        //private readonly LogContext _context;
-        private NLogService _logService = new();
-        Logger logger = LogManager.GetCurrentClassLogger();
-        #endregion
+        private readonly Logger logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 
-        #region Constructor
-        ///// <summary>  </summary>
-        //public LogsService(LogContext context)
-        //{
-        //    _context = context;
-        //    _logService.CreateLogger();
-        //}
-        /// <summary>  </summary>
-        public LogsService()
-        {
-            _logService.CreateLogger();
-        }
-        #endregion
-
-        #region Public Methods
-        /// <summary> WriteApiLog </summary>
-        /// <param name="logResult"></param>
-        /// <returns></returns>
-        public async Task WriteApiLog(LogResultModel logResult)
+        #region Methods
+        /// <summary>WriteApiLog</summary>
+        public async Task<long> WriteApiLog(LogResultModel loggingInfo)
         {
             try
             {
-                //write log
+                //var apiLog = loggingInfo.ToModel();
+                //var logId = await loginRepository.WriteLog(apiLog);
+                //logger.Trace($"Api LogId:{logId}");
+                //return logId;
+                return 0;
             }
+            catch (Exception ex)
+            {
+                logger.Error(ex.ToString());
+                throw;
+            }
+        }
+        /// <summary>WriteApiLog</summary>
+        public async Task WriteResult(long logId, string? resultJson)
+        {
+            try { /*await loginRepository.WriteResult(logId, resultJson);*/ }
+            catch (Exception ex)
+            {
+                logger.Error(ex.ToString());
+                throw;
+            }
+        }
+        /// <summary>WriteApiLog</summary>
+        public async Task WriteException(long logId, string? exception)
+        {
+            try { /*await loginRepository.WriteException(logId, exception);*/ }
             catch (Exception ex)
             {
                 logger.Error(ex.ToString());

@@ -1,6 +1,8 @@
 using JudeWindApp.Attributes;
 using JudeWindApp.Services;
 using JudeWindApp.Util;
+using NLog;
+using NLog.Web;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 using PdfSharp.Fonts;
@@ -9,6 +11,8 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 GlobalFontSettings.FontResolver = WindResolverHelper.Instance;
 
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
 builder.Services.AddControllers().AddJsonOptions(option =>
 {
     option.JsonSerializerOptions.PropertyNamingPolicy = null;
@@ -24,7 +28,8 @@ builder.Services.AddDataService();
 builder.Services.AddScoped(svc => new LogsService());
 builder.Services.AddScoped(typeof(ICodeValidator), typeof(CodeValidator));
 
-builder.Services.AddSession(options => {
+builder.Services.AddSession(options =>
+{
     options.IdleTimeout = TimeSpan.FromMinutes(10); //You can set Time
 });
 builder.Services.AddHttpContextAccessor();

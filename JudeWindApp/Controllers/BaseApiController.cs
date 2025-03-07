@@ -2,12 +2,11 @@
 using JudeWindApp.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
-using NPOI.OpenXml4Net.OPC.Internal;
 
 namespace JudeWindApp.Controllers
 {
 #if !DEBUG
-    [Authorize]
+    [JwtAuthorizeAttribute]
 #endif
     /// <summary>  </summary>
     [Route("[controller]/[action]")]
