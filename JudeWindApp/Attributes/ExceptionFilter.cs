@@ -1,37 +1,37 @@
 ﻿using JudeWind.Model.Base;
+using JudeWindApp.Services;
+using JudeWindApp.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
 namespace JudeWindApp.Attributes
 {
-    /// <summary> 例外處理AOP </summary>
-    public class ExceptionFilter : IAsyncExceptionFilter
+    /// <summary>Exception Handler</summary>
+    public class ExceptionFilter(LogsService logService) : IAsyncExceptionFilter
     {
-        /// <summary> 攔截Exception事件 </summary>
+        /// <summary>Catch exception and log</summary>
         /// <exception cref="NotImplementedException"></exception>
         public Task OnExceptionAsync(ExceptionContext context)
         {
-            // 確認仍未處理
             if (context != null && !context.ExceptionHandled)
             {
                 var _exception = new BaseExceptionMessageModel();
-                if (context.ExceptionDispatchInfo != null)
+                Exception ex = context.ExceptionDispatchInfo != null ? context.ExceptionDispatchInfo.SourceException : context.Exception;
+                _exception.Message = ex.Message ?? string.Empty;
+                _exception.StrackTrace = ex.StackTrace ?? string.Empty;
+                var id = logService.WriteException(new LoggerModel
                 {
-                    _exception.Message = context.ExceptionDispatchInfo.SourceException.Message ?? string.Empty;
-                    _exception.StrackTrace = context.ExceptionDispatchInfo.SourceException.StackTrace ?? string.Empty;
-                }
-                else
-                {
-                    _exception.Message = context.Exception.Message ?? string.Empty;
-                    _exception.StrackTrace = context.Exception.StackTrace ?? string.Empty;
-                }
+                    Code = "ExceptionFilter",
+                    Level = NLogLevel.Error
+                }, ex).GetAwaiter().GetResult();
+                _exception.OtherMessage = $"Id: {id}";
 
                 var result = new BaseResult<BaseExceptionMessageModel>
                 {
                     Code = (int)HttpStatusCode.InternalServerError,
                     Body = _exception,
-                    Exception = context.Exception
+                    Exception = ex,
                 };
                 context.Result = new JsonResult(result);
                 context.ExceptionHandled = true;
