@@ -22,7 +22,39 @@ namespace JudeWindApp.Controllers
             _result.Add($"path1 + path7 = {Path.Combine(path1, path7)}");
             return _result;
         }
+        /// <summary></summary>
+        [HttpGet("Build")]
+        public List<string> BuildStrArr()
+        {
+            List<string> _strArr = [];
+            List<int> _index = [];
+            string ConvertToIndArray(List<int> _list) => $"['{string.Join("','", _index.Select(x => x.ToString()))}']";
 
+            _strArr.Add("能力強化0");
+            for (int i = 199; i <= 206; i++) _index.Add(i);
+            for (int i = 215; i <= 222; i++) _index.Add(i);
+            for (int i = 232; i <= 238; i++) _index.Add(i);
+            for (int i = 246; i <= 252; i++) _index.Add(i);
+            _strArr.Add(ConvertToIndArray(_index));
+            _index.Clear();
+
+            _strArr.Add("能力強化1");
+            for (int i = 207; i <= 214; i++) _index.Add(i);
+            for (int i = 223; i <= 230; i++) _index.Add(i);
+            for (int i = 239; i <= 245; i++) _index.Add(i);
+            for (int i = 253; i <= 259; i++) _index.Add(i);
+            for (int i = 260; i <= 263; i++) _index.Add(i);
+            _strArr.Add(ConvertToIndArray(_index));
+            _index.Clear();
+
+            _strArr.Add("技能書");
+            for (int i = 351; i <= 369; i++) _index.Add(i);
+            for (int i = 399; i <= 408; i++) _index.Add(i);
+            _strArr.Add(ConvertToIndArray(_index));
+            _index.Clear();
+
+            return _strArr;
+        }
         /// <summary> doc temple export </summary>
         [HttpGet("Doc")]
         public IActionResult Doc()
