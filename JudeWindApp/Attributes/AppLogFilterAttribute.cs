@@ -22,8 +22,8 @@ namespace JudeWindApp.Attributes
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             ActionExecuting(context);
-            await next();
-            await ActionExecuted(context);
+            var executedContext = await next();
+            await ActionExecuted(executedContext);
         }
 
         /// <summary>Excute when API start,</summary>
@@ -49,14 +49,12 @@ namespace JudeWindApp.Attributes
 
         /// <summary>Excute when API end,</summary>
         /// <param name="context"></param>
-        private async Task ActionExecuted(ActionExecutingContext context)
+        private async Task ActionExecuted(ActionExecutedContext context)
         {
             try
             {
                 DateTime dtEnd = DateTime.Now;
-                var strOutput = "";
-                var jsonResult = context.Result as ObjectResult;
-                strOutput = JsonConvert.SerializeObject(jsonResult?.Value);
+                var strOutput = context.Result != null ? JsonConvert.SerializeObject(context.Result) : "No output or got exception.";
 
                 context.HttpContext.Request.Headers.TryGetValue("__StartTime__", out StringValues dtStartObj);
                 context.HttpContext.Request.Headers.TryGetValue("__InputData__", out StringValues InputObj);
@@ -86,7 +84,6 @@ namespace JudeWindApp.Attributes
                     Input = InputObj.ToString(),
                     Output = strOutput,
                     UserId = userId,
-                    Exception = "",
                     SessionID = context.HttpContext?.Session?.Id ?? string.Empty
                 });
 

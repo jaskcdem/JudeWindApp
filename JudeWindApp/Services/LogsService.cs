@@ -48,7 +48,7 @@ namespace JudeWindApp.Services
                         Value = x.Value.ToString()
                     }).ToList();
                 msg.Append($"{JsonConvert.SerializeObject(headerInfo)}, ");
-                msg.Append($"{nameof(info.Output)}: {info.Output}, {nameof(info.Exception)}: {info.Exception}");
+                msg.Append($"{nameof(info.Output)}: {info.Output}");
                 Logging(logger, msg.ToString());
                 await Task.CompletedTask;
                 return logger.Id;

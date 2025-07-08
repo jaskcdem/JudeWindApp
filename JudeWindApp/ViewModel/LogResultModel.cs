@@ -47,8 +47,6 @@ namespace JudeWindApp.ViewModel
         /// <summary></summary>
         public string SessionID { get; set; } = string.Empty;
         /// <summary></summary>
-        public string Exception { get; set; } = string.Empty;
-        /// <summary></summary>
         public double Second => (EndTime - StartTime).TotalSeconds;
     }
 
