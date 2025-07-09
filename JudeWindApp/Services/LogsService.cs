@@ -1,9 +1,6 @@
-﻿using DocumentFormat.OpenXml.EMMA;
-using JudeWindApp.ViewModel;
-using Microsoft.Extensions.Logging;
+﻿using JudeWindApp.ViewModel;
 using Newtonsoft.Json;
 using NLog;
-using NLog.Web;
 using System.Text;
 
 namespace JudeWindApp.Services
