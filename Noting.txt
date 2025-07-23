@@ -1,0 +1,12 @@
+ * Localizer 依照下列順序抓取語系
+1. Url query
+2. Route
+3. Cookie
+4. Header(PC)
+5. Setup
+當該語系有找到值時 -> 取其值來顯示
+所以不想出現某個語系，就不要做該語系的資源檔
+
+* Localizer 讀db資料
+https://www.nuget.org/packages/Volo.Abp.Localization.Abstractions/9.2.0-rc.2
+https://www.nuget.org/packages/LocalizationProvider#readme-body-tab
