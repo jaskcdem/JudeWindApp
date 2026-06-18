@@ -55,6 +55,25 @@ namespace JudeWindApp.Controllers
 
             return _strArr;
         }
+        /// <summary></summary>
+        [HttpGet("DateTimeTry")]
+        public bool DateTimeTryParse(string dateStr)
+        {
+            return DateTime.TryParse(dateStr, out _);
+        }
+        /// <summary></summary>
+        [HttpGet("TimeOnlyTry")]
+        public bool TimeOnlyTryParse(string timeStr)
+        {
+            return TimeOnly.TryParse(timeStr, out _);
+        }
+        /// <summary></summary>
+        [HttpGet("GuidTry")]
+        public IActionResult GuidTry()
+        {
+            Guid def = default, empty = Guid.Empty, newid = Guid.NewGuid();
+            return Ok(new { def, empty, newid });
+        }
         /// <summary> doc temple export </summary>
         [HttpGet("Doc")]
         public IActionResult Doc()
