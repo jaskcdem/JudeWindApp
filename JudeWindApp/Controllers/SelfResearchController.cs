@@ -1,5 +1,7 @@
-﻿using Common.Extension;
+﻿using Common;
+using Common.Extension;
 using Microsoft.AspNetCore.Mvc;
+using RandomCase = Common.GeneralTool.RandomCase;
 
 namespace JudeWindApp.Controllers
 {
@@ -55,6 +57,8 @@ namespace JudeWindApp.Controllers
 
             return _strArr;
         }
+
+        #region << TryParse >>
         /// <summary></summary>
         [HttpGet("DateTimeTry")]
         public bool DateTimeTryParse(string dateStr)
@@ -74,6 +78,9 @@ namespace JudeWindApp.Controllers
             Guid def = default, empty = Guid.Empty, newid = Guid.NewGuid();
             return Ok(new { def, empty, newid });
         }
+        #endregion
+
+        #region << Doc output >>
         /// <summary> doc temple export </summary>
         [HttpGet("Doc")]
         public IActionResult Doc()
@@ -136,6 +143,17 @@ namespace JudeWindApp.Controllers
         </tr>
     </table>";
             return DownloadFileContent(ExportHelper.ExportDoc(html), "ResumeDemo.docx");
+        }
+        #endregion
+
+        /// <summary>Random id with lower alphabet and number</summary>
+        [HttpGet("RandomId/{len}/{size}")]
+        public List<string> RandomId(int len = 8, int size = 10)
+        {
+            List<string> _result = [];
+            for (int i = 0; i < size; i++)
+                _result.Add(GeneralTool.GetRandomStr([RandomCase.Number, RandomCase.Lower], len));
+            return _result;
         }
     }
 }
