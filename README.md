@@ -1,6 +1,6 @@
 # JudeWindApp
-* net version : dotNet 8.0
-* develop tool : Visual Studio Community 2022 x64
+* IDE : Visual Studio 2026
+* Version : dotNet 10.0
 
 <details>
 

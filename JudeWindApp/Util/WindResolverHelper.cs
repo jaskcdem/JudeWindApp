@@ -36,7 +36,7 @@ public class WindResolverHelper : IFontResolver
         using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fontResourceName)
             ?? throw new Exception($"Font {fontResourceName} not found.");
         byte[] fontData = new byte[stream.Length];
-        stream.Read(fontData, 0, (int)stream.Length);
+        stream.ReadExactly(fontData, 0, (int)stream.Length);
         return fontData;
     }
 }
